@@ -25,7 +25,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 ---
 ## 🧩 Who Did What  
 
-| Member | Role | Responsibilities |
+| Member | Role | other |
 |---------|------|------------------|
 | **Jeremy Greatorex** | Created project, initialized github and git repo, created menu bar, created define language page |
 | **Samriddhi Matharu** | Project Manager: facilitated work, updated readme file, tested compiling the code
