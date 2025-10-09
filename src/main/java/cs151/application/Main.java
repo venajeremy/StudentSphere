@@ -3,51 +3,81 @@ package cs151.application;
 import cs151.application.pages.AddLanguagePage;
 import cs151.application.pages.CreateStudentPage;
 import cs151.application.pages.SearchStudentPage;
+import cs151.application.pages.HomePage;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.Cursor;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 
-import java.io.IOException;
+
+import java.net.URL;
 
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
 
-        // Root contains window layout for all components
+        // --- Root layout: Top (header) + Center (page content) ---
         BorderPane root = new BorderPane();
 
-        // Initialize Pages
+        // --- Instantiate pages (single instances to retain state) ---
         CreateStudentPage createStudent = new CreateStudentPage();
         AddLanguagePage languagePage = new AddLanguagePage();
         SearchStudentPage searchStudent = new SearchStudentPage();
 
-        // Toolbar
-        ToolBar toolBar = new ToolBar();
-        Button studentSearchButton = new Button("Student Search");
-        studentSearchButton.setOnAction((ActionEvent t)->{
-            root.setCenter(searchStudent);
-        });
-        Button createStudentButton = new Button("Create Student");
-        createStudentButton.setOnAction((ActionEvent t)->{
-            root.setCenter(createStudent);
-        });
-        Button defineLanguageButton = new Button("Define Programming Language");
-        defineLanguageButton.setOnAction((ActionEvent t)->{
-            root.setCenter(languagePage);
-        });
-        toolBar.getItems().addAll(studentSearchButton,createStudentButton,defineLanguageButton);
+        // Home page: wire CTAs to navigate to other pages
+        HomePage home = new HomePage(
+                () -> root.setCenter(createStudent),   // "Create Profile" CTA
+                () -> root.setCenter(searchStudent)    // "Generate Report" placeholder
+        );
 
-        // Initialize Root
-        root.setTop(toolBar);
-        root.setCenter(searchStudent);
+        // --- Top header: brand (left) + nav buttons (right) ---
+        Label brand = new Label("StudentSphere");
+        brand.getStyleClass().add("brand");
 
-        stage.setTitle("Student Sphere");
+        // click → go home
+        brand.setOnMouseClicked(e -> root.setCenter(home));
+        brand.setCursor(Cursor.HAND);
+
+
+        Button defineLanguageBtn = new Button("Define Language");
+        defineLanguageBtn.setOnAction(e -> root.setCenter(languagePage));
+
+        Button createStudentBtn = new Button("Create Profile");
+        createStudentBtn.setOnAction(e -> root.setCenter(createStudent));
+
+        Button generateReportBtn = new Button("Generate Report");
+        generateReportBtn.setOnAction(e -> root.setCenter(searchStudent)); // placeholder for now
+
+        HBox nav = new HBox(10, defineLanguageBtn, createStudentBtn, generateReportBtn);
+        nav.setAlignment(Pos.CENTER_RIGHT);
+        nav.setPadding(new Insets(8, 8, 8, 8));
+
+        BorderPane topBar = new BorderPane();
+        topBar.setLeft(brand);
+        topBar.setRight(nav);
+        topBar.getStyleClass().add("topbar");
+
+        // --- Apply header + set default center to Home ---
+        root.setTop(topBar);
+        root.setCenter(home);
+
+        // --- Scene & stage ---
         Scene scene = new Scene(root, 1200, 600);
 
+        // Optional: attach stylesheet if present
+        URL css = getClass().getResource("/ui/application.css");
+        if (css != null) {
+            scene.getStylesheets().add(css.toExternalForm());
+        }
+
+        stage.setTitle("Student Sphere");
         stage.setScene(scene);
         stage.show();
     }

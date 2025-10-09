@@ -1,34 +1,49 @@
 package cs151.application.pages;
 
+import cs151.application.domain.ProgrammingLanguage;
+import cs151.application.service.LanguageCatalog;
 import javafx.event.ActionEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
 public class AddLanguagePage extends Page {
+
+    private final LanguageCatalog catalog = new LanguageCatalog(); // in-memory for this assignment
+
     public AddLanguagePage() {
         super();
 
-        //Creating a GridPane container
-        GridPane grid = new GridPane();
+        Label title = new Label("Add a new programming language!");
 
-        //Defining the Name text field
-        final TextField name = new TextField();
+        TextField name = new TextField();
         name.setPromptText("Enter Programming Language...");
-        GridPane.setConstraints(name, 0, 0);
-        grid.getChildren().add(name);
 
-        //Defining the Submit button
         Button submit = new Button("Submit");
-        submit.setOnAction((ActionEvent e) -> {
-            String languageName = name.getText();
-            System.out.println(languageName);
-        });
-        GridPane.setConstraints(submit, 1, 0);
-        grid.getChildren().add(submit);
+        HBox input = new HBox(10, name, submit);
+        input.setPadding(new Insets(0, 0, 6, 0));
 
-        this.getChildren().add(new Label("Add a new programming language!"));
-        this.getChildren().add(grid);
+        Label message = new Label();
+
+        ListView<ProgrammingLanguage> list = new ListView<>(catalog.items());
+        list.setPrefHeight(320);
+
+        submit.setOnAction((ActionEvent e) -> {
+            StringBuilder error = new StringBuilder();
+            if (catalog.add(name.getText(), error)) {
+                message.setStyle("-fx-text-fill: #2e7d32;"); // green
+                message.setText("Added: " + name.getText().trim());
+                name.clear();
+            } else {
+                message.setStyle("-fx-text-fill: #c62828;"); // red
+                message.setText(error.toString());
+            }
+            name.requestFocus();
+        });
+
+        this.getChildren().addAll(title, input, message, new Label("Defined languages:"), list);
     }
 }
+
+
+// This class represents the UI layer --> displaying the list of 'Programming Language' entities/objects
