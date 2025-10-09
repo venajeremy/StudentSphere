@@ -2,9 +2,11 @@ package cs151.application.pages;
 
 import cs151.application.domain.ProgrammingLanguage;
 import cs151.application.service.LanguageCatalog;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
 public class AddLanguagePage extends Page {
@@ -25,7 +27,17 @@ public class AddLanguagePage extends Page {
 
         Label message = new Label();
 
-        ListView<ProgrammingLanguage> list = new ListView<>(catalog.items());
+        // Create Table
+        TableView<ProgrammingLanguage> list = new TableView<ProgrammingLanguage>(catalog.items());
+        // Create Language Name Column
+        TableColumn<ProgrammingLanguage,String> languageCol = new TableColumn<ProgrammingLanguage,String>("Programming Language");
+        // Define Column Data
+        languageCol.setCellValueFactory(cellData -> {
+            ProgrammingLanguage language = cellData.getValue();
+            return new SimpleStringProperty(language.getName());
+        });
+        // Add Column to table
+        list.getColumns().setAll(languageCol);
         list.setPrefHeight(320);
 
         submit.setOnAction((ActionEvent e) -> {
