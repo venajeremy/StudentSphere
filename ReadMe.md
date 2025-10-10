@@ -25,11 +25,11 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 ---
 ## 🧩 Who Did What
 
-| Member | Role                                    | other |
-|---------|-----------------------------------------|------------------|
-| **Jeremy Greatorex** | Updated programming language table type |
-| **Samriddhi Matharu** |                                         |
-| **Ivan Rivera** |                                         |
+| Member | Role                                                                                                                                                | other |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
+| **Jeremy Greatorex** | Updated programming language table type, Created catalog system with save file detection & creation, Added define language updates to language file |
+| **Samriddhi Matharu** |                                                                                                                                                     |
+| **Ivan Rivera** |                                                                                                                                                     |
 
 ---
 
