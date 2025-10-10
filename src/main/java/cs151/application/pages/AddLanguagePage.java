@@ -11,7 +11,7 @@ import javafx.scene.layout.*;
 
 public class AddLanguagePage extends Page {
 
-    private final LanguageCatalog catalog = new LanguageCatalog(); // in-memory for this assignment
+    private final LanguageCatalog catalog = new LanguageCatalog("src/main/resources/userdata/programmingLanguages.csv"); // in-memory for this assignment
 
     public AddLanguagePage() {
         super();

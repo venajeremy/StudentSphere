@@ -25,11 +25,11 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 ---
 ## 🧩 Who Did What
 
-| Member | Role | other |
-|---------|------|------------------|
-| **Jeremy Greatorex** | Created project, initialized github and git repo, created menu bar, created define language page |
-| **Samriddhi Matharu** | Project Manager: facilitated work, updated readme file, tested compiling the code
-| **Ivan Rivera** |Implemented “Define Programming Language” workflow backed by a modular service and domain layer + Home page adjustments |
+| Member | Role                                    | other |
+|---------|-----------------------------------------|------------------|
+| **Jeremy Greatorex** | Updated programming language table type |
+| **Samriddhi Matharu** |                                         |
+| **Ivan Rivera** |                                         |
 
 ---
 
