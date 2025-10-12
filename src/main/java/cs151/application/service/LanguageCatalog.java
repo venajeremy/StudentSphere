@@ -60,6 +60,71 @@ public class LanguageCatalog extends Catalog {
         addSavedLanguage(rawName);
         return true;
     }
+
+    // use same separator as addSavedLanguage()
+    private static final char SEP = '\t';
+
+    // persists the current list by overwriting the CSV
+    private void saveAll() {
+        var fw = getFileWriter();              // overwrite file
+        if (fw == null) {
+            System.err.println("LanguageCatalog: could not open writer to save all.");
+            return;
+        }
+        try (ICSVWriter writer = new CSVWriterBuilder(fw)
+                .withSeparator(SEP)
+                .build()) {
+            for (ProgrammingLanguage pl : items) {
+                writer.writeNext(new String[]{pl.getName()});
+            }
+        } catch (Exception e) {
+            System.err.println("LanguageCatalog: saveAll error: " + e.getMessage());
+        }
+    }
+
+    // delete an entry, returning true if successfully removed and persisted
+    public boolean remove(ProgrammingLanguage toRemove) {
+        if (toRemove == null) return false;
+        boolean removed = items.remove(toRemove);
+        if (removed) saveAll();
+        return removed;
+    }
+
+    // edit entry, renames entry by replacing with new immutable instance
+    public boolean update(ProgrammingLanguage original, String newRawName, StringBuilder errorOut) {
+
+        // null check
+        if (original == null) {
+            if (errorOut != null) errorOut.append("Nothing selected to edit.");
+            return false;
+        }
+
+        String cleaned = newRawName == null ? "" : newRawName.trim();
+        if (cleaned.isEmpty()) {
+            if (errorOut != null) errorOut.append("Language name is required.");
+            return false;
+        }
+        ProgrammingLanguage candidate = new ProgrammingLanguage(cleaned);
+
+        // if name unchanged, do nothing (but still considered success).
+        if (candidate.equals(original)) return true;
+
+        // prevent duplicates
+        if (items.stream().anyMatch(l -> l.equals(candidate))) {
+            if (errorOut != null) errorOut.append("Language already exists.");
+            return false;
+        }
+
+        int idx = items.indexOf(original);
+        if (idx < 0) { // original not found; refresh from disk and inform user
+            if (errorOut != null) errorOut.append("Original entry no longer exists.");
+            return false;
+        }
+
+        items.set(idx, candidate); // replace in observable list
+        saveAll();                 // persist full list
+        return true;
+    }
 }
 
 // This class represents the Service layer --> manages collection of 'Programming Language' entities/objects

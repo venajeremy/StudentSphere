@@ -23,10 +23,10 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
 
-        // --- Root layout: Top (header) + Center (page content) ---
+        // Root layout: Top (header) + Center (page content)
         BorderPane root = new BorderPane();
 
-        // --- Instantiate pages (single instances to retain state) ---
+        // Instantiate pages (single instances to retain state)
         CreateStudentPage createStudent = new CreateStudentPage();
         AddLanguagePage languagePage = new AddLanguagePage();
         SearchStudentPage searchStudent = new SearchStudentPage();
@@ -37,7 +37,7 @@ public class Main extends Application {
                 () -> root.setCenter(searchStudent)    // "Generate Report" placeholder
         );
 
-        // --- Top header: brand (left) + nav buttons (right) ---
+        // Top header: brand (left) + nav buttons (right)
         Label brand = new Label("StudentSphere");
         brand.getStyleClass().add("brand");
 
@@ -64,11 +64,11 @@ public class Main extends Application {
         topBar.setRight(nav);
         topBar.getStyleClass().add("topbar");
 
-        // --- Apply header + set default center to Home ---
+        // Apply header + set default center to Home
         root.setTop(topBar);
         root.setCenter(home);
 
-        // --- Scene & stage ---
+        //  Scene & stage
         Scene scene = new Scene(root, 1200, 600);
 
         // Optional: attach stylesheet if present
