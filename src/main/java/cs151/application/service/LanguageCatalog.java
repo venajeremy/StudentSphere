@@ -11,6 +11,8 @@ import java.util.List;
 public class LanguageCatalog extends Catalog {
     private final ObservableList<ProgrammingLanguage> items = FXCollections.observableArrayList();
     public ObservableList<ProgrammingLanguage> items() { return items; }
+    // use same separator as addSavedLanguage()
+    private static final char SEP = '\t';
 
     public LanguageCatalog(String fileName){
         super(fileName);
@@ -33,18 +35,6 @@ public class LanguageCatalog extends Catalog {
         }
     }
 
-    private void addSavedLanguage(String lang){
-        ICSVWriter writer = new CSVWriterBuilder(getFileWriterAppend()).withSeparator('\t').build();
-        // feed in your array (or convert your data to an array)
-        String[] entries = {lang};
-        writer.writeNext(entries);
-        try {
-            writer.close();
-        }catch (IOException e){
-            System.err.println("Could not write to csv file: "+e.getMessage());
-        }
-    }
-
     /** Adds a language; returns false and writes an error message if invalid. */
     public boolean add(String rawName, StringBuilder errorOut) {
         if (rawName == null || rawName.trim().isEmpty()) {
@@ -57,15 +47,15 @@ public class LanguageCatalog extends Catalog {
             return false;
         }
         items.add(candidate);
-        addSavedLanguage(rawName);
+        saveAll();
         return true;
     }
 
-    // use same separator as addSavedLanguage()
-    private static final char SEP = '\t';
-
     // persists the current list by overwriting the CSV
     private void saveAll() {
+        // sort language list before saving
+        items.sort((ProgrammingLanguage a, ProgrammingLanguage b) -> a.getName().compareTo(b.getName()));
+
         var fw = getFileWriter();              // overwrite file
         if (fw == null) {
             System.err.println("LanguageCatalog: could not open writer to save all.");

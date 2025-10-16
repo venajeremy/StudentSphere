@@ -27,9 +27,9 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 
 | Member | Role                                                                                                                                                | other |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
-| **Jeremy Greatorex** | Updated programming language table type, Created catalog system with save file detection & creation, Added define language updates to language file |
+| **Jeremy Greatorex** | Updated programming language table type, Created catalog system with save file detection & creation, Added define language updates to language file, Added language sorting |
 | **Samriddhi Matharu** |                                                                                                                                                     |
-| **Ivan Rivera** |                                                                                                                                                     |
+| **Ivan Rivera** |   Implement edit and delete functionality for Define Language page                                                                                                                                                   |
 
 ---
 
