@@ -4,6 +4,7 @@ import com.opencsv.*;
 import cs151.application.domain.ProgrammingLanguage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +20,7 @@ public class LanguageCatalog extends Catalog {
         readSavedLanguages();
     }
 
-    private void readSavedLanguages(){
+    public ObservableList<ProgrammingLanguage> readSavedLanguages(){
         items.clear();
         CSVReader reader = new CSVReaderBuilder(getFileReader()).build();
         List<String[]> entries;
@@ -27,12 +28,13 @@ public class LanguageCatalog extends Catalog {
             entries = reader.readAll();
         } catch(Exception e){
             System.err.println("Could not read csv file: "+e.getMessage());
-            return;
+            return null;
         }
         for(String[] s : entries){
             String languageName = s[0];
             items.add(new ProgrammingLanguage(languageName));
         }
+        return items;
     }
 
     /** Adds a language; returns false and writes an error message if invalid. */

@@ -7,6 +7,7 @@ module cs151.application {
 
     requires javafx.base;
     requires javafx.graphics;
+    requires org.apache.commons.lang3;
 
 
     opens cs151.application to javafx.fxml;
