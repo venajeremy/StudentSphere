@@ -2,14 +2,17 @@ package cs151.application.pages;
 
 import cs151.application.domain.ProgrammingLanguage;
 import cs151.application.service.LanguageCatalog;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 
 public class AddLanguagePage extends Page {
 
@@ -20,6 +23,25 @@ public class AddLanguagePage extends Page {
         super();
 
         Label title = new Label("Add a new programming language!");
+
+        //Back Button
+        Button backButton = new Button("← Back");
+        backButton.setOnAction(e -> {
+            BorderPane root = (BorderPane) getScene().getRoot();
+            HomePage home = new HomePage(
+                    () -> root.setCenter(new CreateStudentPage()),   // Create Profile
+                    () -> root.setCenter(new SearchStudentPage())    // Generate Report
+            );
+            root.setCenter(home);
+        });
+
+        // Align back button to the far right
+        HBox header = new HBox();
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        header.getChildren().addAll(title, spacer, backButton);
+        header.setPadding(new Insets(0, 0, 10, 0));
+        header.setAlignment(Pos.CENTER_LEFT);
 
         // input fields
         TextField name = new TextField();
@@ -125,6 +147,6 @@ public class AddLanguagePage extends Page {
         });
         miDelete.setOnAction(e -> deleteBtn.fire());
 
-        this.getChildren().addAll(title, input, message, new Label("Defined languages:"), list);
+        this.getChildren().addAll(header, title, input, message, new Label("Defined languages:"), list);
     }
 }
