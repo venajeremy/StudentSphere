@@ -13,9 +13,13 @@ public class Student {
 
     private JobStatuses jobStatus;
 
+    private String currentJob;
+
     private ObservableList<ProgrammingLanguage> knownLanguages;
 
     private ObservableList<Databases> knownDatabases;
+
+    private ProfessionalRoles preferredProfessionalRole;
 
     private String facultyEvaluation;
 
@@ -134,16 +138,20 @@ public class Student {
     public Student(String fullName,
                    AcademicStatuses academicStatus,
                    JobStatuses jobStatus,
+                   String currentJob,
                    ObservableList<ProgrammingLanguage> knownLanguages,
                    ObservableList<Databases> knownDatabases,
+                   ProfessionalRoles preferredProfessionalRole,
                    String facultyEvaluation,
                    FutureServiceFlags futureServiceFlag
     ) {
         this.fullName = fullName == null ? "" : fullName.trim();
         this.academicStatus = academicStatus;
         this.jobStatus = jobStatus;
+        this.currentJob = currentJob;
         this.knownLanguages = knownLanguages;
         this.knownDatabases = knownDatabases;
+        this.preferredProfessionalRole = preferredProfessionalRole;
         this.facultyEvaluation = facultyEvaluation;
         this.futureServiceFlag = futureServiceFlag;
     }
@@ -152,24 +160,12 @@ public class Student {
     public String getName() { return fullName; }
     public AcademicStatuses getAcademicStatus() { return academicStatus; }
     public JobStatuses getJobStatus() { return jobStatus; }
+    public String getCurrentJob() { return currentJob; }
     public ObservableList<ProgrammingLanguage> getKnownLanguages() { return knownLanguages; }
     public ObservableList<Databases> getKnownDatabases() { return knownDatabases; }
+    public ProfessionalRoles getPreferredProfessionalRole() { return preferredProfessionalRole; }
     public String getFacultyEvaluation() { return facultyEvaluation; }
     public FutureServiceFlags getFutureServiceFlags() { return futureServiceFlag; }
-
-/*
- private AcademicStatuses academicStatus;
-
-    private JobStatuses jobStatus;
-
-    private ObservableList<ProgrammingLanguage> knownLanguages;
-
-    private ObservableList<Databases> knownDatabases;
-
-    private String facultyEvaluation;
-
-    private FutureServiceFlags futureServiceFlag;
- */
 
     @Override public String toString() { return fullName; }
 

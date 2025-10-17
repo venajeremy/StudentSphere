@@ -20,18 +20,21 @@ public class StudentCatalog extends Catalog {
     public StudentCatalog(String fileName){
         super(fileName);
 
-        /*
+
         // Test Student
+        /*
         Student JohnDoe = new Student("John Doe",
                 Student.AcademicStatuses.FRESHMAN,
                 Student.JobStatuses.UNEMPLOYED,
+                "None.",
                 FXCollections.observableArrayList(new ProgrammingLanguage("Python"), new ProgrammingLanguage("Java")),
                 FXCollections.observableArrayList(Student.Databases.MONGODB, Student.Databases.POSTGRES),
+                Student.ProfessionalRoles.FRONTEND,
                 "No notes yet!",
                 Student.FutureServiceFlags.NONE);
         items.add(JohnDoe);
         saveAll();
-         */
+        */
         readSavedStudents();
 
     }
@@ -88,6 +91,17 @@ public class StudentCatalog extends Catalog {
     }
 
     // Public Methods
+    // add student to items list, sort items list, then save to csv
+    public boolean add(Student student, StringBuilder errorOut) {
+        if (items.stream().anyMatch(l -> l.equals(student))) {
+            errorOut.append("Student already in database.");
+            return false;
+        }
+        items.add(student);
+        saveAll();
+        return true;
+    }
+
     // update items with students in csv file and return them
     public ObservableList<Student> readSavedStudents(){
         items.clear();
@@ -104,22 +118,24 @@ public class StudentCatalog extends Catalog {
         }
         for(String[] s : entries){
             // Read and format csv entry back into Java Objects
-            System.out.println(s.length);
             String fullName = s[0];
             Student.AcademicStatuses academicStatus = stringToEnum(Student.AcademicStatuses.class, s[1]);
             Student.JobStatuses jobStatus = stringToEnum(Student.JobStatuses.class, s[2]);
-            ObservableList<ProgrammingLanguage> knownLanguages = stringListToLanguageList(delimitedStringToStringList(s[3]));
-            ObservableList<Student.Databases> knownDatabases = stringListToEnumList(Student.Databases.class, delimitedStringToStringList(s[4]));
-            String facultyEvaluation = s[5];
-            Student.FutureServiceFlags futureServiceFlag = stringToEnum(Student.FutureServiceFlags.class, s[6]);
+            String currentJob = s[3];
+            ObservableList<ProgrammingLanguage> knownLanguages = stringListToLanguageList(delimitedStringToStringList(s[4]));
+            ObservableList<Student.Databases> knownDatabases = stringListToEnumList(Student.Databases.class, delimitedStringToStringList(s[5]));
+            Student.ProfessionalRoles preferredRole = stringToEnum(Student.ProfessionalRoles.class, s[6]);
+            String facultyEvaluation = s[7];
+            Student.FutureServiceFlags futureServiceFlag = stringToEnum(Student.FutureServiceFlags.class, s[8]);
 
             // Create and add student to list
-            Student newStudent = new Student(fullName, academicStatus, jobStatus, knownLanguages, knownDatabases, facultyEvaluation, futureServiceFlag);
+            Student newStudent = new Student(fullName, academicStatus, jobStatus, currentJob, knownLanguages, knownDatabases, preferredRole, facultyEvaluation, futureServiceFlag);
             items.add(newStudent);
         }
         return items;
     }
 
+    // Private function
     // persists the current list by overwriting the CSV
     private void saveAll() {
         // sort language list before saving
@@ -138,8 +154,10 @@ public class StudentCatalog extends Catalog {
                         student.getName(),
                         enumToString(student.getAcademicStatus()),
                         enumToString(student.getJobStatus()),
+                        student.getCurrentJob(),
                         stringListToDelimitedString(languageListToStringList(student.getKnownLanguages())),
                         stringListToDelimitedString(enumListToStringList(student.getKnownDatabases())),
+                        enumToString(student.getPreferredProfessionalRole()),
                         student.getFacultyEvaluation(),
                         enumToString(student.getFutureServiceFlags())
                 };
