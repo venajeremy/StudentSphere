@@ -1,9 +1,6 @@
 package cs151.application.service;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.ICSVWriter;
+import com.opencsv.*;
 import cs151.application.domain.ProgrammingLanguage;
 import cs151.application.domain.Student;
 import javafx.collections.FXCollections;
@@ -22,6 +19,8 @@ public class StudentCatalog extends Catalog {
 
     public StudentCatalog(String fileName){
         super(fileName);
+
+        /*
         // Test Student
         Student JohnDoe = new Student("John Doe",
                 Student.AcademicStatuses.FRESHMAN,
@@ -32,8 +31,12 @@ public class StudentCatalog extends Catalog {
                 Student.FutureServiceFlags.NONE);
         items.add(JohnDoe);
         saveAll();
+         */
+        readSavedStudents();
+
     }
 
+    // Private CSV Encoding Helper Functions
     private <E extends Enum<E>> String enumToString(E inEnum){
         return inEnum.name();
     }
@@ -50,20 +53,28 @@ public class StudentCatalog extends Catalog {
         return stringList;
     }
 
-    private <E extends Enum<E>> List<E> stringListToEnumList(Class<E> enumType, List<String> inList){
-        List<E> enumList = new ArrayList<>();
+    private <E extends Enum<E>> ObservableList<E> stringListToEnumList(Class<E> enumType, List<String> inList){
+        ObservableList<E> enumList = FXCollections.observableArrayList();
         for(String item : inList){
             enumList.add(stringToEnum(enumType, item));
         }
         return enumList;
     }
 
-    private <T> List<String> objectListToStringList(List<T> objectList){
+    private List<String> languageListToStringList(List<ProgrammingLanguage> objectList){
         List<String> stringList = new ArrayList<>();
-        for(T item : objectList){
+        for(ProgrammingLanguage item : objectList){
             stringList.add(item.toString());
         }
         return stringList;
+    }
+
+    private ObservableList<ProgrammingLanguage> stringListToLanguageList(List<String> stringList){
+        ObservableList<ProgrammingLanguage> languageList = FXCollections.observableArrayList();
+        for(String language : stringList){
+            languageList.add(new ProgrammingLanguage(language));
+        }
+        return languageList;
     }
 
     private String stringListToDelimitedString(List<String> list){
@@ -74,6 +85,39 @@ public class StudentCatalog extends Catalog {
 
     private List<String> delimitedStringToStringList(String str){
         return Arrays.asList(str.split(DEL));
+    }
+
+    // Public Methods
+    // update items with students in csv file and return them
+    public ObservableList<Student> readSavedStudents(){
+        items.clear();
+        CSVParser parser = new CSVParserBuilder()
+                .withSeparator('\t')
+                .build();
+        CSVReader reader = new CSVReaderBuilder(getFileReader()).withCSVParser(parser).build();
+        List<String[]> entries;
+        try{
+            entries = reader.readAll();
+        } catch(Exception e){
+            System.err.println("Could not read csv file: "+e.getMessage());
+            return null;
+        }
+        for(String[] s : entries){
+            // Read and format csv entry back into Java Objects
+            System.out.println(s.length);
+            String fullName = s[0];
+            Student.AcademicStatuses academicStatus = stringToEnum(Student.AcademicStatuses.class, s[1]);
+            Student.JobStatuses jobStatus = stringToEnum(Student.JobStatuses.class, s[2]);
+            ObservableList<ProgrammingLanguage> knownLanguages = stringListToLanguageList(delimitedStringToStringList(s[3]));
+            ObservableList<Student.Databases> knownDatabases = stringListToEnumList(Student.Databases.class, delimitedStringToStringList(s[4]));
+            String facultyEvaluation = s[5];
+            Student.FutureServiceFlags futureServiceFlag = stringToEnum(Student.FutureServiceFlags.class, s[6]);
+
+            // Create and add student to list
+            Student newStudent = new Student(fullName, academicStatus, jobStatus, knownLanguages, knownDatabases, facultyEvaluation, futureServiceFlag);
+            items.add(newStudent);
+        }
+        return items;
     }
 
     // persists the current list by overwriting the CSV
@@ -94,7 +138,7 @@ public class StudentCatalog extends Catalog {
                         student.getName(),
                         enumToString(student.getAcademicStatus()),
                         enumToString(student.getJobStatus()),
-                        stringListToDelimitedString(objectListToStringList(student.getKnownLanguages())),
+                        stringListToDelimitedString(languageListToStringList(student.getKnownLanguages())),
                         stringListToDelimitedString(enumListToStringList(student.getKnownDatabases())),
                         student.getFacultyEvaluation(),
                         enumToString(student.getFutureServiceFlags())

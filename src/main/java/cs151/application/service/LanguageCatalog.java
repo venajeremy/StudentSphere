@@ -22,7 +22,10 @@ public class LanguageCatalog extends Catalog {
 
     public ObservableList<ProgrammingLanguage> readSavedLanguages(){
         items.clear();
-        CSVReader reader = new CSVReaderBuilder(getFileReader()).build();
+        CSVParser parser = new CSVParserBuilder()
+                .withSeparator('\t')
+                .build();
+        CSVReader reader = new CSVReaderBuilder(getFileReader()).withCSVParser(parser).build();
         List<String[]> entries;
         try{
             entries = reader.readAll();
