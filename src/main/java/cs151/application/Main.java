@@ -3,6 +3,7 @@ package cs151.application;
 import cs151.application.pages.AddLanguagePage;
 import cs151.application.pages.CreateStudentPage;
 import cs151.application.pages.SearchStudentPage;
+import cs151.application.pages.ViewStudentsPage;
 import cs151.application.pages.HomePage;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -29,12 +30,13 @@ public class Main extends Application {
         // Instantiate pages (single instances to retain state)
         CreateStudentPage createStudent = new CreateStudentPage();
         AddLanguagePage languagePage = new AddLanguagePage();
+         ViewStudentsPage viewStudents = new ViewStudentsPage();
         SearchStudentPage searchStudent = new SearchStudentPage();
 
         // Home page: wire CTAs to navigate to other pages
         HomePage home = new HomePage(
                 () -> root.setCenter(createStudent),   // "Create Profile" CTA
-                () -> root.setCenter(searchStudent)    // "Generate Report" placeholder
+                () -> root.setCenter(viewStudents)    
         );
 
         // Top header: brand (left) + nav buttons (right)
@@ -53,7 +55,7 @@ public class Main extends Application {
         createStudentBtn.setOnAction(e -> root.setCenter(createStudent));
 
         Button generateReportBtn = new Button("Generate Report");
-        generateReportBtn.setOnAction(e -> root.setCenter(searchStudent)); // placeholder for now
+        generateReportBtn.setOnAction(e -> root.setCenter(viewStudents)); 
 
         HBox nav = new HBox(10, defineLanguageBtn, createStudentBtn, generateReportBtn);
         nav.setAlignment(Pos.CENTER_RIGHT);
