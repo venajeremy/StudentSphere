@@ -45,7 +45,11 @@ public class ViewStudentsPage extends Page {
             var root = (BorderPane) getScene().getRoot();
             HomePage home = new HomePage(
                     () -> root.setCenter(new CreateStudentPage()),
-                    () -> root.setCenter(new ViewStudentsPage()) 
+                    () -> {
+                        ViewStudentsPage v = new ViewStudentsPage();
+                        v.onNavigatedTo();          // ensures fresh data on entry
+                        root.setCenter(v);
+                }       
             );
             root.setCenter(home);
         });
@@ -81,26 +85,28 @@ public class ViewStudentsPage extends Page {
         jobCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(nz(cd.getValue().getCurrentJob())));
         jobCol.setPrefWidth(150);
 
+        
         TableColumn<Student, String> langsCol = new TableColumn<>("Known Languages");
         langsCol.setCellValueFactory(cd -> {
-            List<ProgrammingLanguage> langs = cd.getValue().getKnownLanguages();
-            String s = (langs == null) ? "" :
-                    langs.stream().map(pl -> nz(pl.getName()))
-                            .filter(t -> !t.isBlank())
-                            .collect(Collectors.joining(", "));
-            return new ReadOnlyStringWrapper(s);
+                var langs = cd.getValue().getKnownLanguages(); // never null now
+                String s = langs.stream()
+                        .map(pl -> nz(pl.getName()))
+                        .filter(t -> !t.isBlank())
+                        .collect(Collectors.joining(", "));
+                return new ReadOnlyStringWrapper(s); // "" when empty
         });
-        langsCol.setPrefWidth(220);
+
 
         TableColumn<Student, String> dbCol = new TableColumn<>("Known Databases");
         dbCol.setCellValueFactory(cd -> {
-            var dbs = cd.getValue().getKnownDatabases();
-            String s = (dbs == null) ? "" :
-                    dbs.stream().map(Enum::name).collect(Collectors.joining(", "));
-            return new ReadOnlyStringWrapper(s);
+                var dbs = cd.getValue().getKnownDatabases(); // never null now
+                String s = dbs.stream()
+                        .map(Enum::name)
+                        .collect(Collectors.joining(", "));
+                return new ReadOnlyStringWrapper(s); // "" when empty
         });
-        dbCol.setPrefWidth(200);
 
+        
         TableColumn<Student, String> roleCol = new TableColumn<>("Preferred Role");
         roleCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(
                 cd.getValue().getPreferredProfessionalRole() == null ? "" :
@@ -128,6 +134,11 @@ public class ViewStudentsPage extends Page {
 
         loadData();
     }
+
+    public void onNavigatedTo() {
+        loadData();      // re-read CSV + rebind table items
+        table.refresh(); // ensure UI reflects the latest data
+        }       
 
     private void loadData() {
         try {

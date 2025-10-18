@@ -67,8 +67,10 @@ public class StudentCatalog extends Catalog {
 
     private <E extends Enum<E>> ObservableList<E> stringListToEnumList(Class<E> enumType, List<String> inList){
         ObservableList<E> enumList = FXCollections.observableArrayList();
-        for(String item : inList){
-            enumList.add(stringToEnum(enumType, item));
+        for (String item : inList){
+            if (item == null || item.isBlank()) continue;
+            E val = stringToEnum(enumType, item);
+            if (val != null) enumList.add(val);
         }
         return enumList;
     }
@@ -83,19 +85,21 @@ public class StudentCatalog extends Catalog {
 
     private ObservableList<ProgrammingLanguage> stringListToLanguageList(List<String> stringList){
         ObservableList<ProgrammingLanguage> languageList = FXCollections.observableArrayList();
-        for(String language : stringList){
+        for (String language : stringList){
+            if (language == null || language.isBlank()) continue;
             languageList.add(new ProgrammingLanguage(language));
         }
         return languageList;
     }
 
     private String stringListToDelimitedString(List<String> list){
-        // Clean list of delimiters
-        list.replaceAll(s -> s.replace(DEL, ""));
+        if (list == null || list.isEmpty()) return "";
+        list.replaceAll(s -> s == null ? "" : s.replace(DEL, ""));
         return String.join(DEL, list);
     }
 
     private List<String> delimitedStringToStringList(String str){
+        if (str == null || str.isBlank()) return new ArrayList<>();
         return Arrays.asList(str.split(DEL));
     }
 

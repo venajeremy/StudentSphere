@@ -1,5 +1,6 @@
 package cs151.application.domain;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.Objects;
@@ -149,8 +150,10 @@ public class Student {
         this.academicStatus = academicStatus;
         this.jobStatus = jobStatus;
         this.currentJob = currentJob;
-        this.knownLanguages = knownLanguages;
-        this.knownDatabases = knownDatabases;
+        this.knownLanguages = (knownLanguages == null)
+            ? FXCollections.observableArrayList() : knownLanguages;
+        this.knownDatabases = (knownDatabases == null)
+                ? FXCollections.observableArrayList() : knownDatabases;
         this.preferredProfessionalRole = preferredProfessionalRole;
         this.facultyEvaluation = facultyEvaluation;
         this.futureServiceFlag = futureServiceFlag;
@@ -161,8 +164,11 @@ public class Student {
     public AcademicStatuses getAcademicStatus() { return academicStatus; }
     public JobStatuses getJobStatus() { return jobStatus; }
     public String getCurrentJob() { return currentJob; }
-    public ObservableList<ProgrammingLanguage> getKnownLanguages() { return knownLanguages; }
-    public ObservableList<Databases> getKnownDatabases() { return knownDatabases; }
+    public ObservableList<ProgrammingLanguage> getKnownLanguages() { 
+        return (knownLanguages == null) ? FXCollections.observableArrayList() : knownLanguages;
+    }
+    public ObservableList<Databases> getKnownDatabases() { 
+        return (knownDatabases == null) ? FXCollections.observableArrayList() : knownDatabases; }
     public ProfessionalRoles getPreferredProfessionalRole() { return preferredProfessionalRole; }
     public String getFacultyEvaluation() { return facultyEvaluation; }
     public FutureServiceFlags getFutureServiceFlags() { return futureServiceFlag; }
