@@ -1,1 +1,4 @@
-"John Doe"	"FRESHMAN"	"UNEMPLOYED"	"None."	"Python;Java"	"MONGODB;POSTGRES"	"FRONTEND"	"No notes yet!"	"NONE"
+"David Bowie"	"SOPHOMORE"	"EMPLOYED"	"Musician"	"C++;Python"	"MONGODB"	"BACKEND"	"Lacks ambition"	"WHITELISTED"
+"Garfield"	"GRADUATE"	"EMPLOYED"	"Eats Lasagna"	"C++;Rust"	"POSTGRES"	"DATA"	"Lazy"	"WHITELISTED"
+"Joe Smith"	"FRESHMAN"	"UNEMPLOYED"	""	"C++;Python"	""	"FRONTEND"	""	"NONE"
+"Rick Grimes"	"JUNIOR"	"UNEMPLOYED"	""	""	""	"OTHER"	""	"NONE"

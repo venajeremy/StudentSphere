@@ -23,7 +23,17 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 - **Ivan Rivera** – Computer Science Major
 
 ---
-## 🧩 Who Did What
+## 🧩 Who Did What 10/18/25
+
+| Member | Role                                                                                                                   | other |
+|---------|------------------------------------------------------------------------------------------------------------------------|------------------|
+| **Jeremy Greatorex** | Created define student page, created student class, created student catalog, handled student object to csv conversion. |
+| **Samriddhi Matharu** |                                                                                                                        |
+| **Ivan Rivera** |                                                                                                                        |
+
+
+---
+## 🧩 Who Did What 10/11/25
 
 | Member | Role                                                                                                                                                | other |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------|

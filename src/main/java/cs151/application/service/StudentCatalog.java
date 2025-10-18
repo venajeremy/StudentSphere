@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class StudentCatalog extends Catalog {
@@ -41,11 +42,19 @@ public class StudentCatalog extends Catalog {
 
     // Private CSV Encoding Helper Functions
     private <E extends Enum<E>> String enumToString(E inEnum){
-        return inEnum.name();
+        if(inEnum != null){
+            return inEnum.name();
+        } else {
+            return "";
+        }
     }
 
     private <E extends Enum<E>> E stringToEnum(Class<E> enumType, String inName){
-        return E.valueOf(enumType, inName);
+        try {
+            return E.valueOf(enumType, inName);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return null; // or a default value
+        }
     }
 
     private <E extends Enum<E>> List<String> enumListToStringList(List<E> enumList){
@@ -97,14 +106,36 @@ public class StudentCatalog extends Catalog {
             errorOut.append("Student already in database.");
             return false;
         }
+        // Validate all parameters of the student are correct
+        if (student.getName().length() < 1){
+            errorOut.append("Student name must be provided.");
+            return false;
+        }
+        if (student.getAcademicStatus() == null){
+            errorOut.append("Academic status must be provided.");
+            return false;
+        }
+        if (student.getJobStatus() == null){
+            errorOut.append("Job status must be provided.");
+            return false;
+        }
+        if(student.getJobStatus() == Student.JobStatuses.EMPLOYED && student.getCurrentJob().length() < 1){
+            errorOut.append("Job description must be provided.");
+            return false;
+        }
+        if(student.getPreferredProfessionalRole() == null){
+            errorOut.append("Preferred job role must be provided.");
+            return false;
+        }
+
         items.add(student);
+        items.sort((Student a, Student b) -> a.getName().compareTo(b.getName()));
         saveAll();
         return true;
     }
 
     // update items with students in csv file and return them
     public ObservableList<Student> readSavedStudents(){
-        items.clear();
         CSVParser parser = new CSVParserBuilder()
                 .withSeparator('\t')
                 .build();
@@ -116,6 +147,7 @@ public class StudentCatalog extends Catalog {
             System.err.println("Could not read csv file: "+e.getMessage());
             return null;
         }
+        items.clear();
         for(String[] s : entries){
             // Read and format csv entry back into Java Objects
             String fullName = s[0];
@@ -150,18 +182,23 @@ public class StudentCatalog extends Catalog {
                 .withSeparator(SEP)
                 .build()) {
             for (Student student : items) {
-                String[] parameters = {
-                        student.getName(),
-                        enumToString(student.getAcademicStatus()),
-                        enumToString(student.getJobStatus()),
-                        student.getCurrentJob(),
-                        stringListToDelimitedString(languageListToStringList(student.getKnownLanguages())),
-                        stringListToDelimitedString(enumListToStringList(student.getKnownDatabases())),
-                        enumToString(student.getPreferredProfessionalRole()),
-                        student.getFacultyEvaluation(),
-                        enumToString(student.getFutureServiceFlags())
-                };
-                writer.writeNext(parameters);
+                try {
+                    String[] parameters = {
+                            student.getName(),
+                            enumToString(student.getAcademicStatus()),
+                            enumToString(student.getJobStatus()),
+                            student.getCurrentJob(),
+                            stringListToDelimitedString(languageListToStringList(student.getKnownLanguages())),
+                            stringListToDelimitedString(enumListToStringList(student.getKnownDatabases())),
+                            enumToString(student.getPreferredProfessionalRole()),
+                            student.getFacultyEvaluation(),
+                            enumToString(student.getFutureServiceFlags())
+                    };
+                    writer.writeNext(parameters);
+                } catch (Exception e){
+                    System.err.println("LanguageCatalog: error saving student: "+student.getName()+", with error: " + e.getMessage());
+                }
+
             }
         } catch (Exception e) {
             System.err.println("LanguageCatalog: saveAll error: " + e.getMessage());

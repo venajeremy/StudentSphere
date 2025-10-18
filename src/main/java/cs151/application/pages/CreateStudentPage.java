@@ -4,14 +4,18 @@ import cs151.application.domain.ProgrammingLanguage;
 import cs151.application.domain.Student;
 import cs151.application.service.StudentCatalog;
 import cs151.application.service.LanguageCatalog;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 
 public class CreateStudentPage extends Page{
 
@@ -46,12 +50,12 @@ public class CreateStudentPage extends Page{
         Label employmentTitle = new Label("Choose Employment:");
         ToggleGroup employmentGroup = new ToggleGroup();
 
-        RadioButton unemployed= new RadioButton("Unemployed");
+        RadioButton unemployed= new RadioButton(Student.JobStatuses.UNEMPLOYED.getName());
         unemployed.setToggleGroup(employmentGroup);
         unemployed.setSelected(true);
 
-        RadioButton employed  = new RadioButton("Employed");
-        employed .setToggleGroup(employmentGroup);
+        RadioButton employed  = new RadioButton(Student.JobStatuses.EMPLOYED.getName());
+        employed.setToggleGroup(employmentGroup);
 
         input.getChildren().addAll(employmentTitle, unemployed, employed);
 
@@ -81,7 +85,7 @@ public class CreateStudentPage extends Page{
         input.getChildren().add(databaseTitle);
         ArrayList<Pair<CheckBox, Student.Databases>> availableDatabaseCheckBoxes = new ArrayList<Pair<CheckBox, Student.Databases>>();
         for(Student.Databases db : Student.Databases.values()){
-            CheckBox availableDatabaseCB = new CheckBox(db.name());
+            CheckBox availableDatabaseCB = new CheckBox(db.getName());
 
             availableDatabaseCheckBoxes.add(new Pair<>(availableDatabaseCB, db));
             input.getChildren().add(availableDatabaseCB);
@@ -102,14 +106,79 @@ public class CreateStudentPage extends Page{
 
         input.getChildren().addAll(evaluationTitle, evaluation);
 
+        // Future Service Flags
+        Label whiteListTitle = new Label("Add To Whitelist:");
+        CheckBox whiteList = new CheckBox();
+        Label blackListTitle = new Label("Add To Backlist:");
+        CheckBox blackList = new CheckBox();
+
+        whiteList.setOnAction(event -> {
+            if (whiteList.isSelected()){
+                blackList.setSelected((false));
+            }
+        });
+        blackList.setOnAction(event -> {
+            if (blackList.isSelected()){
+                whiteList.setSelected((false));
+            }
+        });
+
+        input.getChildren().addAll(whiteListTitle, whiteList, blackListTitle, blackList);
+
         // buttons, submit + delete
         Button submit = new Button("Submit");
+        Label submitMessage = new Label("");
 
+        submit.setOnAction((ActionEvent e) -> {
+            String fN = fullName.getText().trim();
+            Student.AcademicStatuses aS = (Student.AcademicStatuses) academicStatus.getValue();
+            Student.JobStatuses jS = (employed.isSelected()) ? Student.JobStatuses.EMPLOYED : Student.JobStatuses.UNEMPLOYED;
+            String cJ = job.getText();
+
+            ObservableList<ProgrammingLanguage> selectedLanguages = FXCollections.observableArrayList();
+            for(Pair<CheckBox, ProgrammingLanguage> aLPair : availableLanguageCheckBoxes){
+                if(aLPair.getKey().isSelected()){
+                    selectedLanguages.add(aLPair.getValue());
+                }
+            }
+            ObservableList<ProgrammingLanguage> kL = selectedLanguages;
+
+            ObservableList<Student.Databases> selectedDbs = FXCollections.observableArrayList();
+            for(Pair<CheckBox, Student.Databases> kDPair : availableDatabaseCheckBoxes){
+                if(kDPair.getKey().isSelected()){
+                    selectedDbs.add(kDPair.getValue());
+                }
+            }
+            ObservableList<Student.Databases> kD = selectedDbs;
+
+            Student.ProfessionalRoles pR = (Student.ProfessionalRoles) preferredRole.getValue();
+            String fE = evaluation.getText();
+
+            Student.FutureServiceFlags fSF;
+            if(whiteList.isSelected()){
+                fSF = Student.FutureServiceFlags.WHITELISTED;
+            } else if(blackList.isSelected()){
+                fSF = Student.FutureServiceFlags.BLACKLISTED;
+            } else {
+                fSF = Student.FutureServiceFlags.NONE;
+            }
+
+            Student newStudent = new Student(fN, aS, jS, cJ, kL, kD, pR, fE, fSF);
+
+            StringBuilder error = new StringBuilder();
+            if (studentCatalog.add(newStudent, error)) {
+                submitMessage.setStyle("-fx-text-fill: #2e7d32;");
+                submitMessage.setText("Added: " + fN);
+            } else {
+                submitMessage.setStyle("-fx-text-fill: #c62828;");
+                submitMessage.setText(error.toString());
+            }
+        });
 
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(input);
-        this.getChildren().addAll(title, scrollPane, new Label("Add New Student To The Database:"), submit);
+        this.getChildren().addAll(title, scrollPane, new Label("Add New Student To The Database:"), submit, submitMessage);
 
     }
 }

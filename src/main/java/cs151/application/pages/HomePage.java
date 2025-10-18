@@ -15,7 +15,7 @@ public class HomePage extends Page {
         super();
 
         // --- Headline + subheadline (Left side) ---
-        Label headline = new Label("Know your students, shape their future");
+        Label headline = new Label("Know your students, \nshape their future");
         headline.getStyleClass().add("hero-title");
 
         Label sub = new Label(
