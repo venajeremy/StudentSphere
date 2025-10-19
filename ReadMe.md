@@ -29,7 +29,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 |---------|------------------------------------------------------------------------------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Created define student page, created student class, created student catalog, handled student object to csv conversion. |
 | **Samriddhi Matharu** |                                                                                                                        |
-| **Ivan Rivera** |                                                                                                                        |
+| **Ivan Rivera** | Implemented auto refresh capability for generate report functionality                                                  |
 
 
 ---

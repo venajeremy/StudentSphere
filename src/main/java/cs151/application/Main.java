@@ -54,8 +54,14 @@ public class Main extends Application {
         Button createStudentBtn = new Button("Create Profile");
         createStudentBtn.setOnAction(e -> root.setCenter(createStudent));
 
+
         Button generateReportBtn = new Button("Generate Report");
-        generateReportBtn.setOnAction(e -> root.setCenter(viewStudents)); 
+        generateReportBtn.setOnAction(e -> {
+            ViewStudentsPage viewPage = new ViewStudentsPage();
+            viewPage.onNavigatedTo();   // force reload from CSV
+            root.setCenter(viewPage);
+        });
+
 
         HBox nav = new HBox(10, defineLanguageBtn, createStudentBtn, generateReportBtn);
         nav.setAlignment(Pos.CENTER_RIGHT);
