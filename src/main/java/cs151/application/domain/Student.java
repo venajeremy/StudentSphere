@@ -8,6 +8,8 @@ import java.util.Objects;
 public class Student {
 
     // Student Settings
+    private int iD;
+
     private String fullName;
 
     private AcademicStatuses academicStatus;
@@ -151,7 +153,33 @@ public class Student {
         this.jobStatus = jobStatus;
         this.currentJob = currentJob;
         this.knownLanguages = (knownLanguages == null)
-            ? FXCollections.observableArrayList() : knownLanguages;
+                ? FXCollections.observableArrayList() : knownLanguages;
+        this.knownDatabases = (knownDatabases == null)
+                ? FXCollections.observableArrayList() : knownDatabases;
+        this.preferredProfessionalRole = preferredProfessionalRole;
+        this.facultyEvaluation = facultyEvaluation;
+        this.futureServiceFlag = futureServiceFlag;
+    }
+
+    // Student Constructor With ID
+    public Student(int iD,
+                   String fullName,
+                   AcademicStatuses academicStatus,
+                   JobStatuses jobStatus,
+                   String currentJob,
+                   ObservableList<ProgrammingLanguage> knownLanguages,
+                   ObservableList<Databases> knownDatabases,
+                   ProfessionalRoles preferredProfessionalRole,
+                   String facultyEvaluation,
+                   FutureServiceFlags futureServiceFlag
+    ) {
+        this.iD = iD;
+        this.fullName = fullName == null ? "" : fullName.trim();
+        this.academicStatus = academicStatus;
+        this.jobStatus = jobStatus;
+        this.currentJob = currentJob;
+        this.knownLanguages = (knownLanguages == null)
+                ? FXCollections.observableArrayList() : knownLanguages;
         this.knownDatabases = (knownDatabases == null)
                 ? FXCollections.observableArrayList() : knownDatabases;
         this.preferredProfessionalRole = preferredProfessionalRole;
@@ -160,18 +188,23 @@ public class Student {
     }
 
     // Student Methods
+    public Integer getID() { return iD; }
     public String getName() { return fullName; }
     public AcademicStatuses getAcademicStatus() { return academicStatus; }
     public JobStatuses getJobStatus() { return jobStatus; }
     public String getCurrentJob() { return currentJob; }
-    public ObservableList<ProgrammingLanguage> getKnownLanguages() { 
+    public ObservableList<ProgrammingLanguage> getKnownLanguages() {
         return (knownLanguages == null) ? FXCollections.observableArrayList() : knownLanguages;
     }
-    public ObservableList<Databases> getKnownDatabases() { 
+    public ObservableList<Databases> getKnownDatabases() {
         return (knownDatabases == null) ? FXCollections.observableArrayList() : knownDatabases; }
     public ProfessionalRoles getPreferredProfessionalRole() { return preferredProfessionalRole; }
     public String getFacultyEvaluation() { return facultyEvaluation; }
     public FutureServiceFlags getFutureServiceFlags() { return futureServiceFlag; }
+
+    public void setID(int iD){
+        this.iD = iD;
+    }
 
     @Override public String toString() { return fullName; }
 
