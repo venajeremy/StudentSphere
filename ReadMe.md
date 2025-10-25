@@ -28,7 +28,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 | Member | Role                                                                                                                   | other |
 |---------|------------------------------------------------------------------------------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Created define student page, created student class, created student catalog, handled student object to csv conversion. |
-| **Samriddhi Matharu** |                                                                                                                        |
+| **Samriddhi Matharu** |  Implemented the ViewStudentsPage feature, which displays all saved student profiles in a JavaFX TableView. Integrated it into the navigation flow by connecting the Generate Report button to this new page and verified data loading from the CSV file (including entires with null programming langauges and databases); Also ensured it was sorted in alphabetical order of Students name                                                                                                                      |
 | **Ivan Rivera** | Implemented auto refresh capability for generate report functionality                                                  |
 
 

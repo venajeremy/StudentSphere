@@ -30,7 +30,7 @@ public class Main extends Application {
         // Instantiate pages (single instances to retain state)
         CreateStudentPage createStudent = new CreateStudentPage();
         AddLanguagePage languagePage = new AddLanguagePage();
-         ViewStudentsPage viewStudents = new ViewStudentsPage();
+        ViewStudentsPage viewStudents = new ViewStudentsPage();
         SearchStudentPage searchStudent = new SearchStudentPage();
 
         // Home page: wire CTAs to navigate to other pages
