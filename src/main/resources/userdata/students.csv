@@ -1,5 +1,2 @@
-"James Loren"	"FRESHMAN"	"EMPLOYED"	"Software Engineer"	"Rust"	""	"BACKEND"	"Nothing Yet"	"WHITELISTED"	"12"
-"John Doe"	"SOPHOMORE"	"UNEMPLOYED"	""	""	""	"BACKEND"	""	"NONE"	"1"
-"Josh David"	"SENIOR"	"UNEMPLOYED"	""	"C++"	"MONGODB"	"OTHER"	""	"NONE"	"13"
-"Kevin Daniels"	"GRADUATE"	"UNEMPLOYED"	"Software Engineer"	"C++;Rust"	"MONGODB"	"DATA"	"Nothing Yet"	"NONE"	"4"
-"Sally Fry"	"FRESHMAN"	"EMPLOYED"	"Software Engineer"	"Rust"	""	"BACKEND"	"Nothing Yet"	"WHITELISTED"	"2"
+"Test1"	"SOPHOMORE"	"UNEMPLOYED"	""	"C++;Rust"	"MONGODB"	"BACKEND"	"NONE"	"1"
+"Test2"	"SENIOR"	"UNEMPLOYED"	""	"C++;Rust"	"MONGODB"	"BACKEND"	"NONE"	"2"

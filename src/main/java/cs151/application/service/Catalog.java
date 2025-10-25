@@ -2,7 +2,7 @@ package cs151.application.service;
 
 import java.io.*;
 
-public class Catalog {
+public abstract class Catalog {
     private final String fileName;
     private FileReader fileReader;
     private FileWriter fileWriter;

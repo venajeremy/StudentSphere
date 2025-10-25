@@ -32,7 +32,7 @@ public class ViewStudentsPage extends Page {
 
     // matches your StudentCatalog usage elsewhere (CSV under resources)
     private final StudentCatalog catalog =
-            new StudentCatalog("src/main/resources/userdata/students.csv");
+            new StudentCatalog("src/main/resources/userdata/students.csv", "src/main/resources/userdata/comments.csv");
 
     public ViewStudentsPage() {
         super();
@@ -114,9 +114,11 @@ public class ViewStudentsPage extends Page {
         ));
         roleCol.setPrefWidth(160);
 
+        /*
         TableColumn<Student, String> evalCol = new TableColumn<>("Faculty Evaluation");
         evalCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(nz(cd.getValue().getFacultyEvaluation())));
         evalCol.setPrefWidth(280);
+         */
 
         TableColumn<Student, String> flagCol = new TableColumn<>("Future Service Flag");
         flagCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(
@@ -125,7 +127,7 @@ public class ViewStudentsPage extends Page {
         ));
         flagCol.setPrefWidth(160);
 
-        table.getColumns().addAll(nameCol, acadCol, jobStatCol, jobCol, langsCol, dbCol, roleCol, evalCol, flagCol);
+        table.getColumns().addAll(nameCol, acadCol, jobStatCol, jobCol, langsCol, dbCol, roleCol, /*evalCol,*/ flagCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPlaceholder(new Label("No students found."));
 
@@ -169,7 +171,7 @@ public class ViewStudentsPage extends Page {
             || (s.getJobStatus() != null && s.getJobStatus().name().toLowerCase().contains(needle))
             || nz(s.getCurrentJob()).toLowerCase().contains(needle)
             || (s.getPreferredProfessionalRole() != null && s.getPreferredProfessionalRole().name().toLowerCase().contains(needle))
-            || nz(s.getFacultyEvaluation()).toLowerCase().contains(needle)
+            /*|| nz(s.getFacultyEvaluation()).toLowerCase().contains(needle)*/
             || (s.getKnownLanguages() != null && s.getKnownLanguages().stream()
                     .map(pl -> nz(pl.getName()).toLowerCase()).anyMatch(n -> n.contains(needle)))
             || (s.getKnownDatabases() != null && s.getKnownDatabases().stream()

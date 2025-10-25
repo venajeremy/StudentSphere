@@ -1,5 +1,6 @@
 package cs151.application.pages;
 
+import cs151.application.domain.Comment;
 import cs151.application.domain.ProgrammingLanguage;
 import cs151.application.domain.Student;
 import cs151.application.service.StudentCatalog;
@@ -8,18 +9,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
-import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.concurrent.Future;
 
 public class CreateStudentPage extends Page{
 
-    private final StudentCatalog studentCatalog = new StudentCatalog("src/main/resources/userdata/students.csv");
+    private final StudentCatalog studentCatalog = new StudentCatalog("src/main/resources/userdata/students.csv", "src/main/resources/userdata/comments.csv");
     private final LanguageCatalog languageCatalog = new LanguageCatalog("src/main/resources/userdata/programmingLanguages.csv");
 
     public CreateStudentPage() {
@@ -99,12 +98,12 @@ public class CreateStudentPage extends Page{
 
         input.getChildren().addAll(preferredRoleTitle, preferredRole);
 
-        // Faculty Evaluation
-        Label evaluationTitle = new Label("Input Current Faculty Evaluation:");
-        TextArea evaluation = new TextArea();
-        evaluation.setPromptText("Enter student notes...");
+        // Initial Comment
+        Label firstCommentTitle = new Label("Input Initial Student Comment:");
+        TextArea firstComment = new TextArea();
+        firstComment.setPromptText("Enter student notes...");
 
-        input.getChildren().addAll(evaluationTitle, evaluation);
+        input.getChildren().addAll(firstCommentTitle, firstComment);
 
         // Future Service Flags
         Label whiteListTitle = new Label("Add To Whitelist:");
@@ -152,7 +151,6 @@ public class CreateStudentPage extends Page{
             ObservableList<Student.Databases> kD = selectedDbs;
 
             Student.ProfessionalRoles pR = (Student.ProfessionalRoles) preferredRole.getValue();
-            String fE = evaluation.getText();
 
             Student.FutureServiceFlags fSF;
             if(whiteList.isSelected()){
@@ -163,16 +161,27 @@ public class CreateStudentPage extends Page{
                 fSF = Student.FutureServiceFlags.NONE;
             }
 
-            Student newStudent = new Student(fN, aS, jS, cJ, kL, kD, pR, fE, fSF);
+            // Create new student
+            Student newStudent = new Student(fN, aS, jS, cJ, kL, kD, pR, fSF);
 
+            // Add student to catalog
             StringBuilder error = new StringBuilder();
-            if (studentCatalog.add(newStudent, error)) {
+            int newStudentID = studentCatalog.add(newStudent, error);
+            if (newStudentID != -1) {
                 submitMessage.setStyle("-fx-text-fill: #2e7d32;");
                 submitMessage.setText("Added: " + fN);
             } else {
                 submitMessage.setStyle("-fx-text-fill: #c62828;");
                 submitMessage.setText(error.toString());
             }
+
+            // Add first comment to new student
+            String firstCommentText = firstComment.getText();
+            LocalDate currentDate = LocalDate.now();
+            Comment newComment = new Comment(newStudentID, firstCommentText, currentDate);
+
+            studentCatalog.addComment(newComment);
+
         });
 
 

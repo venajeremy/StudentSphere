@@ -1,6 +1,7 @@
 package cs151.application.service;
 
 import com.opencsv.*;
+import cs151.application.domain.Comment;
 import cs151.application.domain.ProgrammingLanguage;
 import cs151.application.domain.Student;
 import javafx.collections.FXCollections;
@@ -8,7 +9,6 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class StudentCatalog extends Catalog {
@@ -19,40 +19,58 @@ public class StudentCatalog extends Catalog {
     private static final char SEP = '\t';
     private static final String DEL = ";";
 
-    public StudentCatalog(String fileName){
+    private CommentCatalog commentCatalog;
+
+    public StudentCatalog(String fileName, String commentFileName){
         super(fileName);
+        commentCatalog = new CommentCatalog(commentFileName);
 
         readSavedStudents();
 
     }
 
+    public boolean addComment(Comment comment){
+        Student FoundStudent = items.stream()
+                .filter(s -> s.getID() == comment.getStudentID())
+                .findFirst()
+                .orElse(null);
+
+        if(FoundStudent==null){
+            return false;
+        }
+
+        FoundStudent.addComment(comment);
+        commentCatalog.add(comment);
+        return true;
+    }
+
     // Public Methods
     // add student to items list, sort items list, then save to csv
-    public boolean add(Student student, StringBuilder errorOut) {
+    public int add(Student student, StringBuilder errorOut) {
         if (items.stream().anyMatch(l -> l.equals(student))) {
             errorOut.append("Student already in database.");
-            return false;
+            return -1;
         }
         // Validate all parameters of the student are correct
         if (student.getName().length() < 1){
             errorOut.append("Student name must be provided.");
-            return false;
+            return -1;
         }
         if (student.getAcademicStatus() == null){
             errorOut.append("Academic status must be provided.");
-            return false;
+            return -1;
         }
         if (student.getJobStatus() == null){
             errorOut.append("Job status must be provided.");
-            return false;
+            return -1;
         }
         if(student.getJobStatus() == Student.JobStatuses.EMPLOYED && student.getCurrentJob().length() < 1){
             errorOut.append("Job description must be provided.");
-            return false;
+            return -1;
         }
         if(student.getPreferredProfessionalRole() == null){
             errorOut.append("Preferred job role must be provided.");
-            return false;
+            return -1;
         }
 
         // Set students id
@@ -61,9 +79,10 @@ public class StudentCatalog extends Catalog {
 
         // Add student
         items.add(student);
+        // Remove sort here:
         items.sort((Student a, Student b) -> a.getName().compareTo(b.getName()));
         saveAll();
-        return true;
+        return student.getID();
     }
 
     // update items with students in csv file and return them
@@ -81,6 +100,7 @@ public class StudentCatalog extends Catalog {
         }
         items.clear();
         for(String[] s : entries){
+
             // Read and format csv entry back into Java Objects
             String fullName = s[0];
             Student.AcademicStatuses academicStatus = stringToEnum(Student.AcademicStatuses.class, s[1]);
@@ -89,16 +109,22 @@ public class StudentCatalog extends Catalog {
             ObservableList<ProgrammingLanguage> knownLanguages = stringListToLanguageList(delimitedStringToStringList(s[4]));
             ObservableList<Student.Databases> knownDatabases = stringListToEnumList(Student.Databases.class, delimitedStringToStringList(s[5]));
             Student.ProfessionalRoles preferredRole = stringToEnum(Student.ProfessionalRoles.class, s[6]);
-            String facultyEvaluation = s[7];
-            Student.FutureServiceFlags futureServiceFlag = stringToEnum(Student.FutureServiceFlags.class, s[8]);
-            int iD = Integer.parseInt(s[9]);
+            Student.FutureServiceFlags futureServiceFlag = stringToEnum(Student.FutureServiceFlags.class, s[7]);
+            int iD = Integer.parseInt(s[8]);
 
             // Update max ID
             maxID = Math.max(maxID, iD);
 
-            // Create and add student to list
-            Student newStudent = new Student(iD, fullName, academicStatus, jobStatus, currentJob, knownLanguages, knownDatabases, preferredRole, facultyEvaluation, futureServiceFlag);
-            items.add(newStudent);
+            // Create new student
+            Student newStudent = new Student(iD, fullName, academicStatus, jobStatus, currentJob, knownLanguages, knownDatabases, preferredRole, futureServiceFlag);
+
+            // Get student's comments and add them
+            ArrayList<Comment> studentComments = commentCatalog.getCommentsForID(iD);
+            for(Comment comment : studentComments){
+                newStudent.addComment(comment);
+            }
+
+           items.add(newStudent);
         }
         return items;
     }
@@ -127,7 +153,6 @@ public class StudentCatalog extends Catalog {
                             stringListToDelimitedString(languageListToStringList(student.getKnownLanguages())),
                             stringListToDelimitedString(enumListToStringList(student.getKnownDatabases())),
                             enumToString(student.getPreferredProfessionalRole()),
-                            student.getFacultyEvaluation(),
                             enumToString(student.getFutureServiceFlags()),
                             Integer.toString(student.getID())
                     };
