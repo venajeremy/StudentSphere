@@ -25,6 +25,16 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 ---
 ## 🧩 Who Did What 10/18/25
 
+| Member | Role                                                                                                                                                                       | other |
+|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
+| **Jeremy Greatorex** | Modified comment system to support multiple individual comments stored in seperate file. Reviewed student search implementation. Implemented delete student functionality. |
+| **Samriddhi Matharu** |                                                                                                                                                                            |
+| **Ivan Rivera** |                                                                                                                                                                            |
+
+
+---
+## 🧩 Who Did What 10/18/25
+
 | Member | Role                                                                                                                   | other |
 |---------|------------------------------------------------------------------------------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Created define student page, created student class, created student catalog, handled student object to csv conversion. |

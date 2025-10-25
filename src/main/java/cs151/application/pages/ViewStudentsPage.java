@@ -58,9 +58,29 @@ public class ViewStudentsPage extends Page {
         search.textProperty().addListener((obs, ov, nv) -> applyFilter(nv));
 
         Button refresh = new Button("Refresh");
+        Button deleteBtn = new Button("Delete");
+        Label message = new Label();
+
+        // delete logic
+        deleteBtn.disableProperty().bind(
+                table.getSelectionModel().selectedItemProperty().isNull()
+        );
+        deleteBtn.setOnAction(e -> {
+            Student sel = table.getSelectionModel().getSelectedItem();
+            if (sel == null) return;
+            if (catalog.remove(sel)) {
+                refresh.fire();
+                message.setStyle("-fx-text-fill: #2e7d32;");
+                message.setText("Deleted: " + sel.getName());
+            } else {
+                message.setStyle("-fx-text-fill: #c62828;");
+                message.setText("Could not delete selection.");
+            }
+        });
+
         refresh.setOnAction(e -> loadData());
 
-        HBox top = new HBox(8, back, search, refresh);
+        HBox top = new HBox(8, back, search, refresh, deleteBtn, message);
         top.setPadding(new Insets(12));
         container.setTop(top);
 

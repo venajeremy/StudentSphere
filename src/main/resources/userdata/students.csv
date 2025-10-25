@@ -1,2 +1,5 @@
-"Test1"	"SOPHOMORE"	"UNEMPLOYED"	""	"C++;Rust"	"MONGODB"	"BACKEND"	"NONE"	"1"
-"Test2"	"SENIOR"	"UNEMPLOYED"	""	"C++;Rust"	"MONGODB"	"BACKEND"	"NONE"	"2"
+"Caleb Monroe"	"FRESHMAN"	"UNEMPLOYED"	"Software Engineer"	"C++;Python"	"POSTGRES"	"FRONTEND"	"NONE"	"2"
+"Ethan Voss"	"SOPHOMORE"	"UNEMPLOYED"	"Software Engineer"	"C++"	"MYSQL"	"DATA"	"NONE"	"4"
+"Lenna Ortiz"	"FRESHMAN"	"UNEMPLOYED"	""	"C++;Python"	"MONGODB"	"FRONTEND"	"NONE"	"6"
+"Maya Gallagher"	"GRADUATE"	"UNEMPLOYED"	"Software Engineer"	"Rust"	"MYSQL"	"DATA"	"NONE"	"3"
+"Riley Chen"	"FRESHMAN"	"UNEMPLOYED"	"Software Engineer"	"Python"	"MYSQL;POSTGRES"	"DATA"	"BLACKLISTED"	"5"

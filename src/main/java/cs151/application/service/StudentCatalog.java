@@ -85,6 +85,16 @@ public class StudentCatalog extends Catalog {
         return student.getID();
     }
 
+    // delete an entry, returning true if successfully removed and persisted
+    public boolean remove(Student toRemove) {
+        // remove comments to this user
+        commentCatalog.removeFromStudent(toRemove.getID());
+        if (toRemove == null) return false;
+        boolean removed = items.remove(toRemove);
+        if (removed) saveAll();
+        return removed;
+    }
+
     // update items with students in csv file and return them
     public ObservableList<Student> readSavedStudents(){
         CSVParser parser = new CSVParserBuilder()

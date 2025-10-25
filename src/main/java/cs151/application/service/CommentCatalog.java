@@ -58,6 +58,12 @@ public class CommentCatalog extends Catalog{
         return true;
     }
 
+    // remove comments to this user
+    public void removeFromStudent(int studentID){
+        items.removeIf(comment -> comment.getStudentID() == studentID);
+        saveAll();
+    }
+
     // Private functions
     // persists the current list by overwriting the CSV
     private void saveAll() {
