@@ -13,7 +13,7 @@ import java.util.List;
 
 public class StudentCatalog extends Catalog {
 
-    private final ObservableList<Student> items = FXCollections.observableArrayList();
+    private final static ObservableList<Student> items = FXCollections.observableArrayList();
     public ObservableList<Student> items() { return items; }
     private int maxID;
     private static final char SEP = '\t';

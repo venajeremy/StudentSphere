@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CommentCatalog extends Catalog{
 
-    private final ObservableList<Comment> items = FXCollections.observableArrayList();
+    private final static ObservableList<Comment> items = FXCollections.observableArrayList();
     public ObservableList<Comment> items() { return items; }
     private int maxID;
     private static final char SEP = '\t';

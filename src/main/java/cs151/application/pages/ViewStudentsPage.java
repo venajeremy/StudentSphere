@@ -85,7 +85,10 @@ public class ViewStudentsPage extends Page {
         container.setTop(top);
 
         // ----- Table columns (aligned with StudentCatalog getters) -----
+        table.setEditable(true);
+
         TableColumn<Student, String> nameCol = new TableColumn<>("Name");
+        nameCol.setEditable(true);
         nameCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(nz(cd.getValue().getName())));
         nameCol.setPrefWidth(180);
 
@@ -146,6 +149,29 @@ public class ViewStudentsPage extends Page {
                         cd.getValue().getFutureServiceFlags().name()
         ));
         flagCol.setPrefWidth(160);
+
+
+        // Right click context menu
+
+        ContextMenu cm = new ContextMenu();
+        MenuItem miEdit = new MenuItem("Edit");
+        MenuItem miDelete = new MenuItem("Delete");
+        cm.getItems().addAll(miEdit, miDelete);
+
+        table.setRowFactory(tv -> {
+            TableRow<Student> row = new TableRow<>();
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                row.setContextMenu(newItem == null ? null : cm);
+            });
+            return row;
+        });
+
+        miEdit.setOnAction(e -> {
+            int rowIdx = table.getSelectionModel().getSelectedIndex();
+            if (rowIdx >= 0) table.edit(rowIdx, nameCol);
+        });
+        miDelete.setOnAction(e -> deleteBtn.fire());
+
 
         table.getColumns().addAll(nameCol, acadCol, jobStatCol, jobCol, langsCol, dbCol, roleCol, /*evalCol,*/ flagCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

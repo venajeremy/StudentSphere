@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class LanguageCatalog extends Catalog {
-    private final ObservableList<ProgrammingLanguage> items = FXCollections.observableArrayList();
+    private final static ObservableList<ProgrammingLanguage> items = FXCollections.observableArrayList();
     public ObservableList<ProgrammingLanguage> items() { return items; }
     // use same separator as addSavedLanguage()
     private static final char SEP = '\t';
