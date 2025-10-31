@@ -30,7 +30,7 @@ public class AddLanguagePage extends Page {
             BorderPane root = (BorderPane) getScene().getRoot();
             HomePage home = new HomePage(
                     () -> root.setCenter(new CreateStudentPage()),   // Create Profile
-                    () -> root.setCenter(new SearchStudentPage())    // Generate Report
+                    () -> root.setCenter(new ViewStudentsPage())    // Generate Report
             );
             root.setCenter(home);
         });

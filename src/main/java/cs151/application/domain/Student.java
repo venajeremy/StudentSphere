@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Student {
 
     // Student Settings
-    private int iD;
+    private int iD = -1;
 
     private String fullName;
 
@@ -27,6 +27,8 @@ public class Student {
     private ObservableList<Comment> comments = FXCollections.observableArrayList();
 
     private FutureServiceFlags futureServiceFlag;
+
+    public static final int INVALID_ID = -1;
 
     // Student Constructor
     public Student(String fullName,

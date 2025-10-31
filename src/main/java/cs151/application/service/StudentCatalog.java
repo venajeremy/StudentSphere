@@ -46,6 +46,24 @@ public class StudentCatalog extends Catalog {
 
     // Public Methods
     // add student to items list, sort items list, then save to csv
+    public boolean update(Student student, StringBuilder errorOut){
+        if(student.getID()==Student.INVALID_ID){
+            errorOut.append("Error updating student: No associated StudentID with this student");
+            return false;
+        }
+
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getID() == student.getID()) {
+                items.set(i, student);
+                return true;
+            }
+        }
+
+        errorOut.append("Error updating student: Could not find student in database with matching ID");
+        return false;
+
+    }
+
     public int add(Student student, StringBuilder errorOut) {
         if (items.stream().anyMatch(l -> l.equals(student))) {
             errorOut.append("Student already in database.");
