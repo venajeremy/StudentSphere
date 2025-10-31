@@ -28,7 +28,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 | Member | Role                                                                                                       | other |
 |---------|------------------------------------------------------------------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Implemented edit student page. Fixed delete student glitch. Implemented update method for student catalog. |
-| **Samriddhi Matharu** |                                                                                                            |
+| **Samriddhi Matharu** |    Implemented an Edit button on the Generate Report page (next to Delete) to let users easily modify student records. Updated the Current Job column to show blank values when the job status is “Unemployed.” Ensured both Edit and Delete buttons stay disabled until a row is selected.                                                                                                           |
 | **Ivan Rivera** |                                                                                                            |
 
 
@@ -39,7 +39,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 | Member | Role                                                                                                                                                                       | other |
 |---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Modified comment system to support multiple individual comments stored in seperate file. Reviewed student search implementation. Implemented delete student functionality. |
-| **Samriddhi Matharu** |                                                                                                                                                                            |
+| **Samriddhi Matharu** |    pulled and compiled the code to do some user testing  on features implemented                                                                                                                                                        |
 | **Ivan Rivera** |                                                                                                                                                                            |
 
 
@@ -59,7 +59,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 | Member | Role                                                                                                                                                | other |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Updated programming language table type, Created catalog system with save file detection & creation, Added define language updates to language file, Added language sorting |
-| **Samriddhi Matharu** |                                                                                                                                                     |
+| **Samriddhi Matharu** |   implemented back button to homepage                                                                                                                                                   |
 | **Ivan Rivera** |   Implement edit and delete functionality for Define Language page                                                                                                                                                   |
 
 ---
