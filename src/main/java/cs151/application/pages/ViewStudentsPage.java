@@ -59,7 +59,23 @@ public class ViewStudentsPage extends Page {
 
         Button refresh = new Button("Refresh");
         Button deleteBtn = new Button("Delete");
+        Button editBtn = new Button("Edit");
         Label message = new Label();
+
+
+        // edit logic: disable until a row is selected 
+        editBtn.disableProperty().bind(
+                table.getSelectionModel().selectedItemProperty().isNull()
+        );
+
+        // navigate to the edit page for the selected student
+        editBtn.setOnAction(e -> {
+            Student student = table.getSelectionModel().getSelectedItem();
+            if (student == null) return;
+            var root = (BorderPane) getScene().getRoot();
+            root.setCenter(new EditStudentPage(student));
+        });
+
 
         // delete logic
         deleteBtn.disableProperty().bind(
@@ -80,7 +96,7 @@ public class ViewStudentsPage extends Page {
 
         refresh.setOnAction(e -> loadData());
 
-        HBox top = new HBox(8, back, search, refresh, deleteBtn, message);
+        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, message);
         top.setPadding(new Insets(12));
         container.setTop(top);
 
@@ -108,6 +124,21 @@ public class ViewStudentsPage extends Page {
         jobCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(nz(cd.getValue().getCurrentJob())));
         jobCol.setPrefWidth(150);
 
+        jobCol.setCellFactory(col -> new TableCell<Student, String>() {
+            @Override
+            protected void updateItem(String job, boolean empty) {
+                super.updateItem(job, empty);
+                if (empty) { setText(null); return; }
+
+                Student s = getTableView().getItems().get(getIndex());
+                String status = (s.getJobStatus() == null) ? "" : s.getJobStatus().name();
+                boolean unemployed = status.equalsIgnoreCase("UNEMPLOYED");
+
+                setText(unemployed ? "" : job);
+            }
+        });
+
+
         
         TableColumn<Student, String> langsCol = new TableColumn<>("Known Languages");
         langsCol.setCellValueFactory(cd -> {
@@ -128,6 +159,7 @@ public class ViewStudentsPage extends Page {
                         .collect(Collectors.joining(", "));
                 return new ReadOnlyStringWrapper(s); // "" when empty
         });
+
 
         
         TableColumn<Student, String> roleCol = new TableColumn<>("Preferred Role");
