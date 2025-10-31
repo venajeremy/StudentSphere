@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
@@ -29,11 +30,20 @@ public class EditStudentPage extends Page{
 
         Label title = new Label("Edit "+student.getName()+"'s student account: ");
 
+        //Back Button
+        Button backButton = new Button("← Back");
+        backButton.setOnAction(e -> {
+            BorderPane root = (BorderPane) getScene().getRoot();
+            ViewStudentsPage viewPage = new ViewStudentsPage();
+            viewPage.onNavigatedTo();   // force reload from CSV
+            root.setCenter(viewPage);
+        });
+
         // input fields
         // Name
         Label fullNameTitle = new Label("Enter Student's Full Name:");
         TextField fullName = new TextField();
-        fullName.setPromptText(student.getName());
+        fullName.setText(student.getName());
 
         input.getChildren().addAll(fullNameTitle, fullName);
 
@@ -52,17 +62,18 @@ public class EditStudentPage extends Page{
 
         RadioButton unemployed= new RadioButton(Student.JobStatuses.UNEMPLOYED.getName());
         unemployed.setToggleGroup(employmentGroup);
-        unemployed.setSelected(true);
+        unemployed.setSelected(student.getJobStatus() == Student.JobStatuses.UNEMPLOYED);
 
         RadioButton employed  = new RadioButton(Student.JobStatuses.EMPLOYED.getName());
         employed.setToggleGroup(employmentGroup);
+        employed.setSelected(student.getJobStatus() == Student.JobStatuses.EMPLOYED);
 
         input.getChildren().addAll(employmentTitle, unemployed, employed);
 
         // Job details
         Label jobTitle = new Label("Enter Current Job:");
         TextField job = new TextField();
-        job.setPromptText("Current Job");
+        job.setText(student.getCurrentJob());
         jobTitle.visibleProperty().bind(employed.selectedProperty());
         job.visibleProperty().bind(employed.selectedProperty());
 
@@ -75,6 +86,7 @@ public class EditStudentPage extends Page{
         ArrayList<Pair<CheckBox, ProgrammingLanguage>> availableLanguageCheckBoxes = new ArrayList<Pair<CheckBox, ProgrammingLanguage>>();
         for(ProgrammingLanguage pL : availableLanguages){
             CheckBox availableLanguageCB = new CheckBox(pL.getName());
+            availableLanguageCB.setSelected(student.getKnownLanguages().contains(pL));
 
             availableLanguageCheckBoxes.add(new Pair<>(availableLanguageCB, pL));
             input.getChildren().add(availableLanguageCB);
@@ -86,6 +98,7 @@ public class EditStudentPage extends Page{
         ArrayList<Pair<CheckBox, Student.Databases>> availableDatabaseCheckBoxes = new ArrayList<Pair<CheckBox, Student.Databases>>();
         for(Student.Databases db : Student.Databases.values()){
             CheckBox availableDatabaseCB = new CheckBox(db.getName());
+            availableDatabaseCB.setSelected(student.getKnownDatabases().contains(db));
 
             availableDatabaseCheckBoxes.add(new Pair<>(availableDatabaseCB, db));
             input.getChildren().add(availableDatabaseCB);
@@ -96,15 +109,14 @@ public class EditStudentPage extends Page{
         ComboBox preferredRole = new ComboBox();
 
         preferredRole.getItems().addAll(Student.ProfessionalRoles.values());
+        preferredRole.getSelectionModel().select(student.getPreferredProfessionalRole());
 
         input.getChildren().addAll(preferredRoleTitle, preferredRole);
 
         // Initial Comment
-        Label firstCommentTitle = new Label("Input Initial Student Comment:");
-        TextArea firstComment = new TextArea();
-        firstComment.setPromptText("Enter student notes...");
+        Label firstCommentTitle = new Label("Comments will be displayed here:");
 
-        input.getChildren().addAll(firstCommentTitle, firstComment);
+        input.getChildren().addAll(firstCommentTitle);
 
         // Future Service Flags
         Label whiteListTitle = new Label("Add To Whitelist:");
@@ -123,13 +135,16 @@ public class EditStudentPage extends Page{
             }
         });
 
+        blackList.setSelected(student.getFutureServiceFlags()==Student.FutureServiceFlags.BLACKLISTED);
+        whiteList.setSelected(student.getFutureServiceFlags()==Student.FutureServiceFlags.WHITELISTED);
+
         input.getChildren().addAll(whiteListTitle, whiteList, blackListTitle, blackList);
 
-        // buttons, submit + delete
-        Button submit = new Button("Submit");
+        // buttons, update
+        Button update = new Button("Update");
         Label submitMessage = new Label("");
 
-        submit.setOnAction((ActionEvent e) -> {
+        update.setOnAction((ActionEvent e) -> {
             String fN = fullName.getText().trim();
             Student.AcademicStatuses aS = (Student.AcademicStatuses) academicStatus.getValue();
             Student.JobStatuses jS = (employed.isSelected()) ? Student.JobStatuses.EMPLOYED : Student.JobStatuses.UNEMPLOYED;
@@ -162,33 +177,25 @@ public class EditStudentPage extends Page{
                 fSF = Student.FutureServiceFlags.NONE;
             }
 
-            // Create new student
-            Student newStudent = new Student(fN, aS, jS, cJ, kL, kD, pR, fSF);
+            // Create new student with ID so we can update the specified student
+            Student newStudent = new Student(student.getID(), fN, aS, jS, cJ, kL, kD, pR, fSF);
 
             // Add student to catalog
             StringBuilder error = new StringBuilder();
-            int newStudentID = studentCatalog.add(newStudent, error);
-            if (newStudentID != -1) {
+            if (studentCatalog.update(newStudent, error)) {
                 submitMessage.setStyle("-fx-text-fill: #2e7d32;");
-                submitMessage.setText("Added: " + fN);
+                submitMessage.setText("Updated "+fN+"'s student profile!");
             } else {
                 submitMessage.setStyle("-fx-text-fill: #c62828;");
                 submitMessage.setText(error.toString());
             }
-
-            // Add first comment to new student
-            String firstCommentText = firstComment.getText();
-            LocalDate currentDate = LocalDate.now();
-            Comment newComment = new Comment(newStudentID, firstCommentText, currentDate);
-
-            studentCatalog.addComment(newComment);
 
         });
 
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(input);
-        this.getChildren().addAll(title, scrollPane, new Label("Add New Student To The Database:"), submit, submitMessage);
+        this.getChildren().addAll(title, backButton, scrollPane, new Label("Add New Student To The Database:"), update, submitMessage);
 
     }
 }

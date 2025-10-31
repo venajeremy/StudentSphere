@@ -124,7 +124,7 @@ public class CreateStudentPage extends Page{
 
         input.getChildren().addAll(whiteListTitle, whiteList, blackListTitle, blackList);
 
-        // buttons, submit + delete
+        // buttons, submit
         Button submit = new Button("Submit");
         Label submitMessage = new Label("");
 

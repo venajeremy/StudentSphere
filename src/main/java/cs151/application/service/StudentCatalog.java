@@ -55,6 +55,7 @@ public class StudentCatalog extends Catalog {
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getID() == student.getID()) {
                 items.set(i, student);
+                saveAll();
                 return true;
             }
         }

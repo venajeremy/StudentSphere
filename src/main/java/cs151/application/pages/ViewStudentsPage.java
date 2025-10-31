@@ -167,8 +167,9 @@ public class ViewStudentsPage extends Page {
         });
 
         miEdit.setOnAction(e -> {
-            int rowIdx = table.getSelectionModel().getSelectedIndex();
-            if (rowIdx >= 0) table.edit(rowIdx, nameCol);
+            Student student = table.getSelectionModel().getSelectedItem();
+            var root = (BorderPane) getScene().getRoot();
+            root.setCenter(new EditStudentPage(student));
         });
         miDelete.setOnAction(e -> deleteBtn.fire());
 
