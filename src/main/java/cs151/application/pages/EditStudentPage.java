@@ -195,7 +195,7 @@ public class EditStudentPage extends Page{
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(input);
-        this.getChildren().addAll(title, backButton, scrollPane, new Label("Add New Student To The Database:"), update, submitMessage);
+        this.getChildren().addAll(title, backButton, scrollPane, new Label("Update Student's Account:"), update, submitMessage);
 
     }
 }

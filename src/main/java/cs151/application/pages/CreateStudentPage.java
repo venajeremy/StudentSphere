@@ -45,7 +45,7 @@ public class CreateStudentPage extends Page{
 
         input.getChildren().addAll(academicStatusTitle, academicStatus);
 
-        // Employeed
+        // Employed
         Label employmentTitle = new Label("Choose Employment:");
         ToggleGroup employmentGroup = new ToggleGroup();
 
@@ -62,6 +62,7 @@ public class CreateStudentPage extends Page{
         Label jobTitle = new Label("Enter Current Job:");
         TextField job = new TextField();
         job.setPromptText("Current Job");
+        job.setText("");
         jobTitle.visibleProperty().bind(employed.selectedProperty());
         job.visibleProperty().bind(employed.selectedProperty());
 
