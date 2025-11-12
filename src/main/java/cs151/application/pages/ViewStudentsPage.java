@@ -30,7 +30,7 @@ public class ViewStudentsPage extends Page {
     private ObservableList<Student> master = FXCollections.observableArrayList();
     private final TextField search = new TextField();
 
-    // matches your StudentCatalog usage elsewhere (CSV under resources)
+
     private final StudentCatalog catalog =
             new StudentCatalog("src/main/resources/userdata/students.csv", "src/main/resources/userdata/comments.csv");
 
@@ -60,6 +60,7 @@ public class ViewStudentsPage extends Page {
         Button refresh = new Button("Refresh");
         Button deleteBtn = new Button("Delete");
         Button editBtn = new Button("Edit");
+        Button viewCommentsBtn = new Button("View Comments");
         Label message = new Label();
 
 
@@ -75,6 +76,17 @@ public class ViewStudentsPage extends Page {
             var root = (BorderPane) getScene().getRoot();
             root.setCenter(new EditStudentPage(student));
         });
+
+        // view comments btn : only enable when a row is selected
+        viewCommentsBtn.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        viewCommentsBtn.setOnAction(e -> {
+            Student sel = table.getSelectionModel().getSelectedItem();
+            if (sel == null) return;
+            var root = (BorderPane) getScene().getRoot();
+            // pass the *same* catalog so comments write to the same files
+            root.setCenter(new StudentCommentsPage(sel, catalog));
+        });
+
 
 
         // delete logic
@@ -96,11 +108,11 @@ public class ViewStudentsPage extends Page {
 
         refresh.setOnAction(e -> loadData());
 
-        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, message);
+        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, viewCommentsBtn, message);
         top.setPadding(new Insets(12));
         container.setTop(top);
 
-        // ----- Table columns (aligned with StudentCatalog getters) -----
+        // Table columns (aligned with StudentCatalog getters)
         table.setEditable(true);
 
         TableColumn<Student, String> nameCol = new TableColumn<>("Name");
