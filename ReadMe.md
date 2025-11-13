@@ -25,11 +25,11 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 ---
 ## 🧩 Who Did What 11/15/25
 
-| Member | Role                                                                                                       | other |
-|---------|------------------------------------------------------------------------------------------------------------|------------------|
-| **Jeremy Greatorex** |  |
-| **Samriddhi Matharu** |                                                                                                              |
-| **Ivan Rivera** |                                                                                                            |
+| Member | Role                                               | other |
+|---------|----------------------------------------------------|------------------|
+| **Jeremy Greatorex** | Implemented add comment feature                    |
+| **Samriddhi Matharu** |                                                    |
+| **Ivan Rivera** | Implemented comment page and view student comments |
 
 
 ---
