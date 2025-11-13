@@ -4,10 +4,14 @@ import cs151.application.domain.Comment;
 import cs151.application.domain.Student;
 import cs151.application.service.StudentCatalog;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+import java.time.LocalDate;
 
 public class StudentCommentsPage extends Page {
 
@@ -37,6 +41,30 @@ public class StudentCommentsPage extends Page {
         HBox header = new HBox(12, back, title);
         header.setPadding(new Insets(12));
 
+        // add comment
+        VBox input = new VBox(15);
+        input.setPadding(new Insets(6, 6, 6, 6));
+
+        Label commentTitle = new Label("Add Comment To Student:");
+        TextArea comment = new TextArea();
+        comment.setPromptText("Enter student notes...");
+
+        // buttons, submit
+        Button submit = new Button("Submit");
+
+        submit.setOnAction((ActionEvent e) -> {
+            // Add first comment to new student
+            String commentText = comment.getText();
+            LocalDate currentDate = LocalDate.now();
+            Comment newComment = new Comment(student.getID(), commentText, currentDate);
+
+            catalog.addComment(newComment);
+        });
+
+        input.getChildren().addAll(commentTitle, comment, submit);
+
+
+
         // table (existing comments)
         TableColumn<Comment, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(cd -> {
@@ -57,7 +85,8 @@ public class StudentCommentsPage extends Page {
         // layout
         BorderPane shell = new BorderPane();
         shell.setTop(header);
-        shell.setCenter(table);
+        shell.setCenter(input);
+        shell.setBottom(table);
 
         getChildren().add(shell);
     }

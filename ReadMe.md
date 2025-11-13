@@ -23,6 +23,16 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 - **Ivan Rivera** – Computer Science Major
 
 ---
+## 🧩 Who Did What 11/15/25
+
+| Member | Role                                                                                                       | other |
+|---------|------------------------------------------------------------------------------------------------------------|------------------|
+| **Jeremy Greatorex** |  |
+| **Samriddhi Matharu** |                                                                                                              |
+| **Ivan Rivera** |                                                                                                            |
+
+
+---
 ## 🧩 Who Did What 11/1/25
 
 | Member | Role                                                                                                       | other |
@@ -30,7 +40,6 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 | **Jeremy Greatorex** | Implemented edit student page. Fixed delete student glitch. Implemented update method for student catalog. |
 | **Samriddhi Matharu** |    Implemented an Edit button on the Generate Report page (next to Delete) to let users easily modify student records. Updated the Current Job column to show blank values when the job status is “Unemployed.” Ensured both Edit and Delete buttons stay disabled until a row is selected.                                                                                                           |
 | **Ivan Rivera** |                                                                                                            |
-
 
 
 ---
