@@ -44,6 +44,31 @@ public class StudentCatalog extends Catalog {
         return true;
     }
 
+        public boolean deleteComment(Comment comment) {
+        if (comment == null) {
+            return false;
+        }
+
+        // 1. Remove from comment CSV via CommentCatalog
+        boolean removed = commentCatalog.deleteComment(comment);
+        if (!removed) {
+            return false;
+        }
+
+        // 2. Keep the in-memory student list in sync
+        for (Student s : items) {
+            if (s.getID() == comment.getStudentID()) {
+                if (s.getComments() != null) {
+                    s.getComments().removeIf(c -> c.getID() == comment.getID());
+                }
+                break;
+            }
+        }
+
+        return true;
+    }
+
+
     // Public Methods
     // add student to items list, sort items list, then save to csv
     public boolean update(Student student, StringBuilder errorOut){

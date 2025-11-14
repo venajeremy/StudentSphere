@@ -58,6 +58,33 @@ public class CommentCatalog extends Catalog{
         return true;
     }
 
+    //delete comment
+    public boolean deleteComment(Comment toRemove) {
+    if (toRemove == null) {
+        return false;
+    }
+
+    // 1. Remove from the main list
+    boolean removed = items.removeIf(c -> c.getID() == toRemove.getID());
+
+    if (removed) {
+        // 2. Also remove from the per-student cache
+        ArrayList<Comment> list = studentComments.get(toRemove.getStudentID());
+        if (list != null) {
+            list.removeIf(c -> c.getID() == toRemove.getID());
+            if (list.isEmpty()) {
+                studentComments.remove(toRemove.getStudentID());
+            }
+        }
+
+        // 3. Persist changes to CSV
+        saveAll();
+    }
+
+    return removed;
+}
+
+
     // remove comments to this user
     public void removeFromStudent(int studentID){
         items.removeIf(comment -> comment.getStudentID() == studentID);

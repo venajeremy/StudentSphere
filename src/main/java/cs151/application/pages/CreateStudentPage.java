@@ -1,6 +1,5 @@
 package cs151.application.pages;
 
-import cs151.application.domain.Comment;
 import cs151.application.domain.ProgrammingLanguage;
 import cs151.application.domain.Student;
 import cs151.application.service.StudentCatalog;
@@ -13,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CreateStudentPage extends Page{
@@ -99,12 +97,7 @@ public class CreateStudentPage extends Page{
 
         input.getChildren().addAll(preferredRoleTitle, preferredRole);
 
-        // Initial Comment
-        Label firstCommentTitle = new Label("Input Initial Student Comment:");
-        TextArea firstComment = new TextArea();
-        firstComment.setPromptText("Enter student notes...");
-
-        input.getChildren().addAll(firstCommentTitle, firstComment);
+        
 
         // Future Service Flags
         Label whiteListTitle = new Label("Add To Whitelist:");
@@ -176,13 +169,7 @@ public class CreateStudentPage extends Page{
                 submitMessage.setText(error.toString());
             }
 
-            // Add first comment to new student
-            String firstCommentText = firstComment.getText();
-            LocalDate currentDate = LocalDate.now();
-            Comment newComment = new Comment(newStudentID, firstCommentText, currentDate);
-
-            studentCatalog.addComment(newComment);
-
+           
         });
 
 

@@ -52,6 +52,28 @@ public class StudentCommentsPage extends Page {
         // buttons, submit
         Button submit = new Button("Submit");
 
+        // buttons, delete
+        Button delete = new Button("Delete Selected");
+        // disable when nothing selected
+        delete.disableProperty().bind(
+                table.getSelectionModel().selectedItemProperty().isNull()
+        );
+
+        delete.setOnAction(e -> {
+            Comment selected = table.getSelectionModel().getSelectedItem();
+            if (selected == null) return;
+
+            // call into the catalog to delete from storage
+            boolean removed = catalog.deleteComment(selected);
+
+            if (removed) {
+                // also remove from the in-memory list for this student
+                student.getComments().removeIf(c -> c.getID() == selected.getID());
+                // table is backed by student.getComments(), so it will refresh automatically
+            }
+        });
+
+
         submit.setOnAction((ActionEvent e) -> {
             // Add first comment to new student
             String commentText = comment.getText();
@@ -61,7 +83,9 @@ public class StudentCommentsPage extends Page {
             catalog.addComment(newComment);
         });
 
-        input.getChildren().addAll(commentTitle, comment, submit);
+        HBox buttons = new HBox(10, submit, delete);
+        input.getChildren().addAll(commentTitle, comment, buttons);
+
 
 
 
