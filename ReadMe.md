@@ -28,8 +28,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 | Member | Role                                               | other |
 |---------|----------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Implemented add comment feature                    |
-| **Samriddhi Matharu** |    
-Refactored the CreateStudentPage by removing the input initial student comment section, and implemented delete-comment functionality within CommentCatalog, including removal from the in-memory cache and CSV persistence. Ensured the backend is fully prepared for integrating comment deletion in the StudentCommentsPage UI.                                                |
+| **Samriddhi Matharu** |    Refactored the CreateStudentPage by removing the input initial student comment section, and implemented delete-comment functionality within CommentCatalog, including removal from the in-memory cache and CSV persistence. Ensured the backend is fully prepared for integrating comment deletion in the StudentCommentsPage UI.    |
 | **Ivan Rivera** | Implemented comment page and view student comments |
 
 
