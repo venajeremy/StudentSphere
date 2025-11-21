@@ -23,7 +23,17 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 - **Ivan Rivera** – Computer Science Major
 
 ---
-## 🧩 Who Did What 11/15/25
+## 🧩 Who Did What v-0.9
+
+| Member | Role                                                                                                                                                                                                                                                             | other |
+|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
+| **Jeremy Greatorex** | Merged create, view, and update student into one adaptable class. Merged view comment into its own class. Created View Student Page.                                                                                                   |
+| **Samriddhi Matharu** |  |
+| **Ivan Rivera** |                                                                                                                                                                                                                 |
+
+
+---
+## 🧩 Who Did What v-0.8
 
 | Member | Role                                               | other |
 |---------|----------------------------------------------------|------------------|
@@ -33,7 +43,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 
 
 ---
-## 🧩 Who Did What 11/1/25
+## 🧩 Who Did What v-0.7
 
 | Member | Role                                                                                                       | other |
 |---------|------------------------------------------------------------------------------------------------------------|------------------|
@@ -43,7 +53,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 
 
 ---
-## 🧩 Who Did What 10/25/25
+## 🧩 Who Did What v-0.6
 
 | Member | Role                                                                                                                                                                       | other |
 |---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
@@ -53,7 +63,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 
 
 ---
-## 🧩 Who Did What 10/18/25
+## 🧩 Who Did What v-0.5
 
 | Member | Role                                                                                                                   | other |
 |---------|------------------------------------------------------------------------------------------------------------------------|------------------|
@@ -63,7 +73,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 
 
 ---
-## 🧩 Who Did What 10/11/25
+## 🧩 Who Did What v-0.4
 
 | Member | Role                                                                                                                                                | other |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------|

@@ -60,7 +60,8 @@ public class ViewStudentsPage extends Page {
         Button refresh = new Button("Refresh");
         Button deleteBtn = new Button("Delete");
         Button editBtn = new Button("Edit");
-        Button viewCommentsBtn = new Button("View Comments");
+        Button addCommentBtn = new Button("Add Comment");
+
         Label message = new Label();
 
 
@@ -78,8 +79,8 @@ public class ViewStudentsPage extends Page {
         });
 
         // view comments btn : only enable when a row is selected
-        viewCommentsBtn.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
-        viewCommentsBtn.setOnAction(e -> {
+        addCommentBtn.disableProperty().bind(table.getSelectionModel().selectedItemProperty().isNull());
+        addCommentBtn.setOnAction(e -> {
             Student sel = table.getSelectionModel().getSelectedItem();
             if (sel == null) return;
             var root = (BorderPane) getScene().getRoot();
@@ -108,7 +109,7 @@ public class ViewStudentsPage extends Page {
 
         refresh.setOnAction(e -> loadData());
 
-        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, viewCommentsBtn, message);
+        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, addCommentBtn, message);
         top.setPadding(new Insets(12));
         container.setTop(top);
 
@@ -181,12 +182,6 @@ public class ViewStudentsPage extends Page {
         ));
         roleCol.setPrefWidth(160);
 
-        /*
-        TableColumn<Student, String> evalCol = new TableColumn<>("Faculty Evaluation");
-        evalCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(nz(cd.getValue().getFacultyEvaluation())));
-        evalCol.setPrefWidth(280);
-         */
-
         TableColumn<Student, String> flagCol = new TableColumn<>("Future Service Flag");
         flagCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(
                 cd.getValue().getFutureServiceFlags() == null ? "" :
@@ -207,6 +202,17 @@ public class ViewStudentsPage extends Page {
             row.itemProperty().addListener((obs, oldItem, newItem) -> {
                 row.setContextMenu(newItem == null ? null : cm);
             });
+
+            // Double click handle for opening view student page
+            row.setOnMouseClicked(event -> {
+                if(event.getClickCount() == 2 && !row.isEmpty()){
+                    Student selected = row.getItem();
+
+                    var root = (BorderPane) getScene().getRoot();
+
+                    root.setCenter(new ViewStudentPage(selected));
+                }
+            });
             return row;
         });
 
@@ -218,7 +224,7 @@ public class ViewStudentsPage extends Page {
         miDelete.setOnAction(e -> deleteBtn.fire());
 
 
-        table.getColumns().addAll(nameCol, acadCol, jobStatCol, jobCol, langsCol, dbCol, roleCol, /*evalCol,*/ flagCol);
+        table.getColumns().addAll(nameCol, acadCol, jobStatCol, jobCol, langsCol, dbCol, roleCol, flagCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPlaceholder(new Label("No students found."));
 

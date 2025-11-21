@@ -57,20 +57,19 @@ public class StudentForm extends VBox {
             fullName.setText(student.getName());
         }
 
-        fullName.setEditable(editable);
+        fullName.setDisable(!editable);
 
         this.getChildren().addAll(fullNameTitle, fullName);
 
         // Academic Status
         Label academicStatusTitle = new Label((creatingStudent) ? "Choose Academic Status:" : "Student Academic Status");
         academicStatus = new ComboBox();
+        academicStatus.setDisable(!editable);
         academicStatus.getItems().addAll(Student.AcademicStatuses.values());
 
         if(!creatingStudent){
             academicStatus.getSelectionModel().select(student.getAcademicStatus());
         }
-
-        academicStatus.setEditable(editable);
 
         this.getChildren().addAll(academicStatusTitle, academicStatus);
 
@@ -105,7 +104,7 @@ public class StudentForm extends VBox {
             job.setText(student.getCurrentJob());
         }
 
-        job.setEditable(editable);
+        job.setDisable(!editable);
 
         this.getChildren().addAll(jobTitle, job);
 
@@ -150,7 +149,7 @@ public class StudentForm extends VBox {
             preferredRole.getSelectionModel().select(student.getPreferredProfessionalRole());
         }
 
-        preferredRole.setEditable(editable);
+        preferredRole.setDisable(!editable);
 
         this.getChildren().addAll(preferredRoleTitle, preferredRole);
 

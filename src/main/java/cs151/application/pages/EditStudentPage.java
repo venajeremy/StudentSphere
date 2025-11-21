@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class EditStudentPage extends Page{
 
     private final StudentCatalog studentCatalog = new StudentCatalog("src/main/resources/userdata/students.csv", "src/main/resources/userdata/comments.csv");
-    private final LanguageCatalog languageCatalog = new LanguageCatalog("src/main/resources/userdata/programmingLanguages.csv");
 
     public EditStudentPage(Student student) {
         super();
@@ -39,7 +38,6 @@ public class EditStudentPage extends Page{
 
         // Student Form In Student Edit Form
         StudentForm sF = new StudentForm(student);
-
 
         // buttons, update
         Button update = new Button("Update");
