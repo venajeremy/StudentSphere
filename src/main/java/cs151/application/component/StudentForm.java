@@ -29,37 +29,53 @@ public class StudentForm extends VBox {
 
     // 3 Constructors: New Student, Edit Student, Edit Student View Only
     public StudentForm(){
+        super(15);
         Build(null, true);
     }
     public StudentForm(Student student){
+        super(15);
         Build(student, true);
     }
     public StudentForm(Student student, boolean bool){
+        super(15);
         Build(student, bool);
     }
 
     private void Build(Student student, boolean editable){
-        this.setPadding(new Insets(6, 6, 6, 6));
 
-        Label title = new Label("Define Student:");
+        boolean creatingStudent = (student==null) ? true : false;
+
+        this.setPadding(new Insets(6, 6, 6, 6));
 
         // this fields
         // Name
-        Label fullNameTitle = new Label("Enter Student's Full Name:");
+        Label fullNameTitle = new Label((creatingStudent) ? "Enter Student's Full Name:" : "Student Full Name: ");
         fullName = new TextField();
         fullName.setPromptText("Full Name");
+
+        if(!creatingStudent){
+            fullName.setText(student.getName());
+        }
+
+        fullName.setEditable(editable);
 
         this.getChildren().addAll(fullNameTitle, fullName);
 
         // Academic Status
-        Label academicStatusTitle = new Label("Choose Academic Status:");
+        Label academicStatusTitle = new Label((creatingStudent) ? "Choose Academic Status:" : "Student Academic Status");
         academicStatus = new ComboBox();
         academicStatus.getItems().addAll(Student.AcademicStatuses.values());
+
+        if(!creatingStudent){
+            academicStatus.getSelectionModel().select(student.getAcademicStatus());
+        }
+
+        academicStatus.setEditable(editable);
 
         this.getChildren().addAll(academicStatusTitle, academicStatus);
 
         // Employed
-        Label employmentTitle = new Label("Choose Employment:");
+        Label employmentTitle = new Label((creatingStudent) ? "Choose Employment:" : "Student Employment:");
         ToggleGroup employmentGroup = new ToggleGroup();
 
         RadioButton unemployed= new RadioButton(Student.JobStatuses.UNEMPLOYED.getName());
@@ -69,15 +85,27 @@ public class StudentForm extends VBox {
         employed = new RadioButton(Student.JobStatuses.EMPLOYED.getName());
         employed.setToggleGroup(employmentGroup);
 
+        if(!creatingStudent){
+            unemployed.setSelected(student.getJobStatus() == Student.JobStatuses.UNEMPLOYED);
+            employed.setSelected(student.getJobStatus() == Student.JobStatuses.EMPLOYED);
+        }
+
+        employed.setDisable(!editable);
+
         this.getChildren().addAll(employmentTitle, unemployed, employed);
 
         // Job details
         Label jobTitle = new Label("Enter Current Job:");
         job = new TextField();
         job.setPromptText("Current Job");
-        job.setText("");
         jobTitle.visibleProperty().bind(employed.selectedProperty());
         job.visibleProperty().bind(employed.selectedProperty());
+
+        if(!creatingStudent){
+            job.setText(student.getCurrentJob());
+        }
+
+        job.setEditable(editable);
 
         this.getChildren().addAll(jobTitle, job);
 
@@ -88,10 +116,15 @@ public class StudentForm extends VBox {
         availableLanguageCheckBoxes = new ArrayList<Pair<CheckBox, ProgrammingLanguage>>();
         for(ProgrammingLanguage pL : availableLanguages){
             CheckBox availableLanguageCB = new CheckBox(pL.getName());
+            if(!creatingStudent){
+                availableLanguageCB.setSelected(student.getKnownLanguages().contains(pL));
+            }
+            availableLanguageCB.setDisable(!editable);
 
             availableLanguageCheckBoxes.add(new Pair<>(availableLanguageCB, pL));
             this.getChildren().add(availableLanguageCB);
         }
+
 
         // Databases known
         Label databaseTitle = new Label("Enter Known Databases:");
@@ -99,6 +132,10 @@ public class StudentForm extends VBox {
         availableDatabaseCheckBoxes = new ArrayList<Pair<CheckBox, Student.Databases>>();
         for(Student.Databases db : Student.Databases.values()){
             CheckBox availableDatabaseCB = new CheckBox(db.getName());
+            if(!creatingStudent){
+                availableDatabaseCB.setSelected(student.getKnownDatabases().contains(db));
+            }
+            availableDatabaseCB.setDisable(!editable);
 
             availableDatabaseCheckBoxes.add(new Pair<>(availableDatabaseCB, db));
             this.getChildren().add(availableDatabaseCB);
@@ -109,9 +146,13 @@ public class StudentForm extends VBox {
         preferredRole = new ComboBox();
 
         preferredRole.getItems().addAll(Student.ProfessionalRoles.values());
+        if(!creatingStudent){
+            preferredRole.getSelectionModel().select(student.getPreferredProfessionalRole());
+        }
+
+        preferredRole.setEditable(editable);
 
         this.getChildren().addAll(preferredRoleTitle, preferredRole);
-
 
 
         // Future Service Flags
@@ -130,6 +171,14 @@ public class StudentForm extends VBox {
                 whiteList.setSelected((false));
             }
         });
+
+        if(!creatingStudent){
+            blackList.setSelected(student.getFutureServiceFlags()==Student.FutureServiceFlags.BLACKLISTED);
+            whiteList.setSelected(student.getFutureServiceFlags()==Student.FutureServiceFlags.WHITELISTED);
+        }
+
+        whiteList.setDisable(!editable);
+        blackList.setDisable(!editable);
 
         this.getChildren().addAll(whiteListTitle, whiteList, blackListTitle, blackList);
 
