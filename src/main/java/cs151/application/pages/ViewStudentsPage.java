@@ -63,8 +63,18 @@ public class ViewStudentsPage extends Page {
         Button deleteBtn = new Button("Delete");
         Button editBtn = new Button("Edit");
         Button viewCommentsBtn = new Button("View Comments");
+        Button showWhitelistedBtn = new Button("Whitelisted");
+        Button showBlacklistedBtn = new Button("Blacklisted");
         Label message = new Label();
 
+
+
+
+        // whiteList button logic
+        showWhitelistedBtn.setOnAction(e -> search.setText("whitelisted"));
+
+        // blackList button logic
+        showBlacklistedBtn.setOnAction(e -> search.setText("blacklisted"));
 
         // edit logic: disable until a row is selected 
         editBtn.disableProperty().bind(
@@ -110,7 +120,7 @@ public class ViewStudentsPage extends Page {
 
         refresh.setOnAction(e -> loadData());
 
-        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, viewCommentsBtn, message);
+        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, viewCommentsBtn, showWhitelistedBtn, showBlacklistedBtn, message);
         top.setPadding(new Insets(12));
         container.setTop(top);
 
