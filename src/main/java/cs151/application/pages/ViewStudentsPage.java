@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -54,15 +55,26 @@ public class ViewStudentsPage extends Page {
             root.setCenter(home);
         });
 
-        search.setPromptText("Search name, status, role, languages, databases, notes…");
+        
+        search.setPromptText("Search (comma-separated, e.g. 'unemployed, python')");
         search.textProperty().addListener((obs, ov, nv) -> applyFilter(nv));
 
         Button refresh = new Button("Refresh");
         Button deleteBtn = new Button("Delete");
         Button editBtn = new Button("Edit");
         Button viewCommentsBtn = new Button("View Comments");
+        Button showWhitelistedBtn = new Button("Whitelisted");
+        Button showBlacklistedBtn = new Button("Blacklisted");
         Label message = new Label();
 
+
+
+
+        // whiteList button logic
+        showWhitelistedBtn.setOnAction(e -> search.setText("whitelisted"));
+
+        // blackList button logic
+        showBlacklistedBtn.setOnAction(e -> search.setText("blacklisted"));
 
         // edit logic: disable until a row is selected 
         editBtn.disableProperty().bind(
@@ -108,7 +120,7 @@ public class ViewStudentsPage extends Page {
 
         refresh.setOnAction(e -> loadData());
 
-        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, viewCommentsBtn, message);
+        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, viewCommentsBtn, showWhitelistedBtn, showBlacklistedBtn, message);
         top.setPadding(new Insets(12));
         container.setTop(top);
 
@@ -252,24 +264,80 @@ public class ViewStudentsPage extends Page {
         }
     }
 
-    private void applyFilter(String q) {
-        if (q == null || q.isBlank()) { table.setItems(master); return; }
-        String needle = q.toLowerCase();
 
-        table.setItems(master.filtered(s ->
-               nz(s.getName()).toLowerCase().contains(needle)
-            || (s.getAcademicStatus() != null && s.getAcademicStatus().name().toLowerCase().contains(needle))
-            || (s.getJobStatus() != null && s.getJobStatus().name().toLowerCase().contains(needle))
-            || nz(s.getCurrentJob()).toLowerCase().contains(needle)
-            || (s.getPreferredProfessionalRole() != null && s.getPreferredProfessionalRole().name().toLowerCase().contains(needle))
-            /*|| nz(s.getFacultyEvaluation()).toLowerCase().contains(needle)*/
-            || (s.getKnownLanguages() != null && s.getKnownLanguages().stream()
-                    .map(pl -> nz(pl.getName()).toLowerCase()).anyMatch(n -> n.contains(needle)))
-            || (s.getKnownDatabases() != null && s.getKnownDatabases().stream()
-                    .map(db -> db.name().toLowerCase()).anyMatch(n -> n.contains(needle)))
-            || (s.getFutureServiceFlags() != null && s.getFutureServiceFlags().name().toLowerCase().contains(needle))
-        ));
+    private void applyFilter(String q) {
+    if (q == null) q = "";
+    String trimmed = q.trim();
+
+    // If nothing typed, show all
+    if (trimmed.isEmpty()) {
+        table.setItems(master);
+        return;
     }
+
+    // Split on commas → AND terms
+    String[] rawTerms = trimmed.split(",");
+    java.util.List<String> terms = new ArrayList<>();
+    for (String part : rawTerms) {
+        String t = part.trim().toLowerCase();
+        if (!t.isEmpty()) {
+            terms.add(t);
+        }
+    }
+
+    if (terms.isEmpty()) {
+        table.setItems(master);
+        return;
+    }
+
+    table.setItems(master.filtered(s -> {
+        if (s == null) return false;
+
+        // Build a big string with all relevant fields for this row
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(nz(s.getName())).append(' ');
+
+        if (s.getAcademicStatus() != null)
+            sb.append(s.getAcademicStatus().name()).append(' ');
+
+        if (s.getJobStatus() != null)
+            sb.append(s.getJobStatus().name()).append(' ');
+
+        sb.append(nz(s.getCurrentJob())).append(' ');
+
+        if (s.getPreferredProfessionalRole() != null)
+            sb.append(s.getPreferredProfessionalRole().name()).append(' ');
+
+        if (s.getFutureServiceFlags() != null)
+            sb.append(s.getFutureServiceFlags().name()).append(' ');
+
+        if (s.getKnownLanguages() != null) {
+            s.getKnownLanguages().forEach(pl ->
+                    sb.append(nz(pl.getName())).append(' ')
+            );
+        }
+
+        if (s.getKnownDatabases() != null) {
+            s.getKnownDatabases().forEach(db ->
+                    sb.append(db.name()).append(' ')
+            );
+        }
+
+        String row = sb.toString().toLowerCase();
+
+        // Every term must appear somewhere in this row
+        for (String term : terms) {
+            if (!row.contains(term)) {
+                return false;   // AND semantics
+            }
+        }
+        return true;
+    }));
+}
+
+
+
 
     private static String nz(String s) { return s == null ? "" : s; }
 }
