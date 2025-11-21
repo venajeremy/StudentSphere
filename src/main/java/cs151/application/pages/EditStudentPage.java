@@ -113,11 +113,6 @@ public class EditStudentPage extends Page{
 
         input.getChildren().addAll(preferredRoleTitle, preferredRole);
 
-        // Initial Comment
-        Label firstCommentTitle = new Label("Comments will be displayed here:");
-
-        input.getChildren().addAll(firstCommentTitle);
-
         // Future Service Flags
         Label whiteListTitle = new Label("Add To Whitelist:");
         CheckBox whiteList = new CheckBox();
