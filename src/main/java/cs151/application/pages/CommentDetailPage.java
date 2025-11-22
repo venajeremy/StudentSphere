@@ -18,7 +18,6 @@ public class CommentDetailPage extends Page {
 
     private final Comment comment;
     private final StudentCatalog catalog;
-    private final Runnable onBack;
 
     private final Label studentNameLabel = new Label();
     private final Label dateLabel = new Label();
@@ -31,32 +30,31 @@ public class CommentDetailPage extends Page {
      *
      * @param comment   the comment to display
      * @param catalog   student catalog used to resolve student name from studentID
-     * @param onBack    callback invoked when the Back button is pressed
      */
-    public CommentDetailPage(Comment comment, StudentCatalog catalog, Runnable onBack) {
+    public CommentDetailPage(Comment comment, StudentCatalog catalog) {
         super();
         this.comment = comment;
         this.catalog = catalog;
-        this.onBack = onBack;
 
         setSpacing(0);
         setPadding(new Insets(0));
 
-        BorderPane root = new BorderPane();
+        BorderPane base = new BorderPane();
 
-        // top: back + title
-        Button back = new Button("← Back");
-        back.setOnAction(e -> {
-            if (onBack != null) {
-                onBack.run();
-            }
+        //Back Button
+        Button backButton = new Button("← Back");
+        backButton.setOnAction(e -> {
+            BorderPane root = (BorderPane) getScene().getRoot();
+            ViewStudentsPage viewPage = new ViewStudentsPage();
+            viewPage.onNavigatedTo();   // force reload from CSV
+            root.setCenter(viewPage);
         });
 
         Label title = new Label("Comment Details");
-        HBox header = new HBox(12, back, title);
+        HBox header = new HBox(12, backButton, title);
         header.setPadding(new Insets(12, 12, 12, 12));
 
-        root.setTop(header);
+        base.setTop(header);
 
         // center: student + date + body
         VBox content = new VBox(10);
@@ -72,6 +70,7 @@ public class CommentDetailPage extends Page {
         bodyArea.setEditable(false);          // read-only display
         bodyArea.setWrapText(true);
         bodyArea.setPrefRowCount(6);
+        bodyArea.setMinHeight(300);
 
         content.getChildren().addAll(
                 studentNameLabel,
@@ -80,9 +79,9 @@ public class CommentDetailPage extends Page {
                 bodyArea
         );
 
-        root.setCenter(content);
+        base.setCenter(content);
 
-        this.getChildren().add(root);
+        this.getChildren().add(base);
     }
 
     private String resolveStudentName(int studentId) {

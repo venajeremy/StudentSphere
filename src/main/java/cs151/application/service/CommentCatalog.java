@@ -42,7 +42,11 @@ public class CommentCatalog extends Catalog{
     }
 
     public ArrayList<Comment> getCommentsForID(int studentID){
-        return studentComments.get(studentID);
+        ArrayList<Comment> comments = studentComments.get(studentID);
+        if(comments == null){
+            comments = new ArrayList<>();
+        }
+        return comments;
     }
 
     public boolean add(Comment comment) {

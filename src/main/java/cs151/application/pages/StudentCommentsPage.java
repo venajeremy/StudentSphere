@@ -1,5 +1,6 @@
 package cs151.application.pages;
 
+import cs151.application.component.CommentsView;
 import cs151.application.domain.Comment;
 import cs151.application.domain.Student;
 import cs151.application.service.StudentCatalog;
@@ -17,8 +18,6 @@ public class StudentCommentsPage extends Page {
 
     private final Student student;
     private final StudentCatalog catalog;
-
-    private final TableView<Comment> table = new TableView<>();
 
     public StudentCommentsPage(Student student, StudentCatalog catalog) {
         super();
@@ -48,6 +47,10 @@ public class StudentCommentsPage extends Page {
         Label commentTitle = new Label("Add Comment To Student:");
         TextArea comment = new TextArea();
         comment.setPromptText("Enter student notes...");
+        comment.setMinHeight(150);
+
+        // comments table
+        CommentsView table = new CommentsView(student.getComments());
 
         // buttons, submit
         Button submit = new Button("Submit");
@@ -86,25 +89,6 @@ public class StudentCommentsPage extends Page {
         HBox buttons = new HBox(10, submit, delete);
         input.getChildren().addAll(commentTitle, comment, buttons);
 
-
-
-
-        // table (existing comments)
-        TableColumn<Comment, String> dateCol = new TableColumn<>("Date");
-        dateCol.setCellValueFactory(cd -> {
-            var d = cd.getValue().getDate();
-            return new ReadOnlyStringWrapper(d == null ? "" : d.toString());
-        });
-        dateCol.setPrefWidth(120);
-
-        TableColumn<Comment, String> msgCol = new TableColumn<>("Comment");
-        msgCol.setCellValueFactory(cd -> new ReadOnlyStringWrapper(cd.getValue().getMessage()));
-        msgCol.setPrefWidth(600);
-
-        table.getColumns().addAll(dateCol, msgCol);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setPlaceholder(new Label("No comments yet."));
-        table.setItems(student.getComments()); // already populated by StudentCatalog.readSavedStudents()
 
         // layout
         BorderPane shell = new BorderPane();
