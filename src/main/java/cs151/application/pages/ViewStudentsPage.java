@@ -32,6 +32,8 @@ public class ViewStudentsPage extends Page {
     private final TextField search = new TextField();
 
 
+    // current future-service flag filter (null = no flag filter)
+    private Student.FutureServiceFlags currentFlagFilter = null;
     private final StudentCatalog catalog =
             new StudentCatalog("src/main/resources/userdata/students.csv", "src/main/resources/userdata/comments.csv");
 
@@ -62,20 +64,10 @@ public class ViewStudentsPage extends Page {
         Button refresh = new Button("Refresh");
         Button deleteBtn = new Button("Delete");
         Button editBtn = new Button("Edit");
-        Button showWhitelistedBtn = new Button("Whitelisted");
-        Button showBlacklistedBtn = new Button("Blacklisted");
         Button addCommentBtn = new Button("Add Comment");
 
         Label message = new Label();
 
-
-
-
-        // whiteList button logic
-        showWhitelistedBtn.setOnAction(e -> search.setText("whitelisted"));
-
-        // blackList button logic
-        showBlacklistedBtn.setOnAction(e -> search.setText("blacklisted"));
 
         // edit logic: disable until a row is selected
         editBtn.disableProperty().bind(
@@ -121,9 +113,41 @@ public class ViewStudentsPage extends Page {
 
         refresh.setOnAction(e -> loadData());
 
-        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, addCommentBtn, showWhitelistedBtn, showBlacklistedBtn, message);
+        HBox top = new HBox(8, back, search, refresh, deleteBtn, editBtn, addCommentBtn, message);
         top.setPadding(new Insets(12));
         container.setTop(top);
+
+
+        // bottom bar: Whitelisted / Blacklisted toggle buttons
+        ToggleButton whitelistedBtn = new ToggleButton("Whitelisted");
+        ToggleButton blacklistedBtn = new ToggleButton("Blacklisted");
+
+        whitelistedBtn.setOnAction(e -> {
+            if (whitelistedBtn.isSelected()) {
+                // turn whitelist filter on, turn blacklist off
+                blacklistedBtn.setSelected(false);
+                currentFlagFilter = Student.FutureServiceFlags.WHITELISTED;
+            } else {
+                // second click → clear filter
+                currentFlagFilter = null;
+            }
+            applyFilter(search.getText());
+        });
+
+        blacklistedBtn.setOnAction(e -> {
+            if (blacklistedBtn.isSelected()) {
+                whitelistedBtn.setSelected(false);
+                currentFlagFilter = Student.FutureServiceFlags.BLACKLISTED;
+            } else {
+                currentFlagFilter = null;
+            }
+            applyFilter(search.getText());
+        });
+
+        HBox bottom = new HBox(8, whitelistedBtn, blacklistedBtn);
+        bottom.setPadding(new Insets(8, 12, 12, 12));
+        container.setBottom(bottom);
+
 
         // Table columns (aligned with StudentCatalog getters)
         table.setEditable(true);
@@ -272,75 +296,63 @@ public class ViewStudentsPage extends Page {
 
 
     private void applyFilter(String q) {
-    if (q == null) q = "";
-    String trimmed = q.trim();
+        if (q == null) q = "";
+        String trimmed = q.trim().toLowerCase();
 
-    // If nothing typed, show all
-    if (trimmed.isEmpty()) {
-        table.setItems(master);
-        return;
-    }
-
-    // Split on commas → AND terms
-    String[] rawTerms = trimmed.split(",");
-    java.util.List<String> terms = new ArrayList<>();
-    for (String part : rawTerms) {
-        String t = part.trim().toLowerCase();
-        if (!t.isEmpty()) {
-            terms.add(t);
-        }
-    }
-
-    if (terms.isEmpty()) {
-        table.setItems(master);
-        return;
-    }
-
-    table.setItems(master.filtered(s -> {
-        if (s == null) return false;
-
-        // Build a big string with all relevant fields for this row
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(nz(s.getName())).append(' ');
-
-        if (s.getAcademicStatus() != null)
-            sb.append(s.getAcademicStatus().name()).append(' ');
-
-        if (s.getJobStatus() != null)
-            sb.append(s.getJobStatus().name()).append(' ');
-
-        sb.append(nz(s.getCurrentJob())).append(' ');
-
-        if (s.getPreferredProfessionalRole() != null)
-            sb.append(s.getPreferredProfessionalRole().name()).append(' ');
-
-        if (s.getFutureServiceFlags() != null)
-            sb.append(s.getFutureServiceFlags().name()).append(' ');
-
-        if (s.getKnownLanguages() != null) {
-            s.getKnownLanguages().forEach(pl ->
-                    sb.append(nz(pl.getName())).append(' ')
-            );
-        }
-
-        if (s.getKnownDatabases() != null) {
-            s.getKnownDatabases().forEach(db ->
-                    sb.append(db.name()).append(' ')
-            );
-        }
-
-        String row = sb.toString().toLowerCase();
-
-        // Every term must appear somewhere in this row
-        for (String term : terms) {
-            if (!row.contains(term)) {
-                return false;   // AND semantics
+        // Split search text into comma-separated AND terms
+        List<String> terms = new ArrayList<>();
+        if (!trimmed.isEmpty()) {
+            for (String part : trimmed.split(",")) {
+                String t = part.trim().toLowerCase();
+                if (!t.isEmpty()) terms.add(t);
             }
         }
-        return true;
-    }));
-}
+
+        table.setItems(master.filtered(s -> {
+            if (s == null) return false;
+
+            // flag filter (white/blacklist)
+            if (currentFlagFilter != null) {
+                if (s.getFutureServiceFlags() != currentFlagFilter)
+                    return false;
+            }
+
+            // filter by flag
+            if (terms.isEmpty()) return true;
+
+            // Build searchable string of all student fields
+            StringBuilder sb = new StringBuilder();
+            sb.append(nz(s.getName())).append(" ");
+
+            if (s.getAcademicStatus() != null)
+                sb.append(s.getAcademicStatus().name()).append(" ");
+
+            if (s.getJobStatus() != null)
+                sb.append(s.getJobStatus().name()).append(" ");
+
+            sb.append(nz(s.getCurrentJob())).append(" ");
+
+            if (s.getPreferredProfessionalRole() != null)
+                sb.append(s.getPreferredProfessionalRole().name()).append(" ");
+
+            if (s.getFutureServiceFlags() != null)
+                sb.append(s.getFutureServiceFlags().name()).append(" ");
+
+            if (s.getKnownLanguages() != null)
+                s.getKnownLanguages().forEach(pl -> sb.append(nz(pl.getName())).append(" "));
+
+            if (s.getKnownDatabases() != null)
+                s.getKnownDatabases().forEach(db -> sb.append(db.name()).append(" "));
+
+            String row = sb.toString().toLowerCase();
+
+            // Every term must be found (AND logic)
+            for (String term : terms) {
+                if (!row.contains(term)) return false;
+            }
+            return true;
+        }));
+    }
 
 
 
