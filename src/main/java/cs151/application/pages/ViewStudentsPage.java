@@ -277,7 +277,7 @@ public class ViewStudentsPage extends Page {
 
     // Split on commas → AND terms
     String[] rawTerms = trimmed.split(",");
-    java.util.List<String> terms = new ArrayList<>();
+    java.util.List<String> terms = new java.util.ArrayList<>();
     for (String part : rawTerms) {
         String t = part.trim().toLowerCase();
         if (!t.isEmpty()) {
@@ -326,15 +326,36 @@ public class ViewStudentsPage extends Page {
 
         String row = sb.toString().toLowerCase();
 
-        // Every term must appear somewhere in this row
+        // Every term must appear (AND semantics),
+        // but treat 'employed' / 'unemployed' specially
         for (String term : terms) {
+
+            if (term.equals("employed")) {
+                // Only match students whose JobStatus == EMPLOYED
+                if (s.getJobStatus() != Student.JobStatuses.EMPLOYED) {
+                    return false;
+                }
+                continue;
+            }
+
+            if (term.equals("unemployed")) {
+                // Only match students whose JobStatus == UNEMPLOYED
+                if (s.getJobStatus() != Student.JobStatuses.UNEMPLOYED) {
+                    return false;
+                }
+                continue;
+            }
+
+            // default: normal substring check across row text
             if (!row.contains(term)) {
-                return false;   // AND semantics
+                return false;
             }
         }
+
         return true;
     }));
 }
+
 
 
 
