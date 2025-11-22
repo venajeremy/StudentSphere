@@ -29,7 +29,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 |---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Merged create, view, and update student into one adaptable class. Merged view comment into its own class. Created View Student Page.                                                                                                   |
 | **Samriddhi Matharu** |  |
-| **Ivan Rivera** |                                                                                                                                                                                                                 |
+| **Ivan Rivera** | Implemented blacklist/whitelist button and toggle logic |                                                                                                                                                                                                 
 
 
 ---
