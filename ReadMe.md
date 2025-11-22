@@ -28,7 +28,7 @@ All data is stored locally using flat-file (CSV) storage as specified in the tec
 | Member | Role                                               | other |
 |---------|----------------------------------------------------|------------------|
 | **Jeremy Greatorex** | Implemented add comment feature                    |
-| **Samriddhi Matharu** |                                                    |
+| **Samriddhi Matharu** |   Implemented multi parameter search/filtering                   |
 | **Ivan Rivera** | Implemented comment page and view student comments |
 
 
